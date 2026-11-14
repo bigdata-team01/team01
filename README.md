@@ -2,6 +2,8 @@
 
 KAMIS 과일 소매가격과 기상청 날씨 자료를 이용하는 빅데이터응용 팀 프로젝트입니다.
 
+팀원은 [팀원 개발 안내](documents/team-development-guide.md)에서 파일별 역할, 개인 DB 설정, 최초 실행과 SQL 수령 이후 절차를 확인하세요.
+
 **현재 상태:** 공통 폴더, PHP 진입 페이지, PDO 연결 설정만 준비되었습니다. `dbcreate.sql` 미수령으로 프로젝트 테이블·뷰·데이터 및 분석 기능은 아직 없습니다. 연결 검사 성공은 기능 구현 완료를 의미하지 않습니다.
 
 ## 개발 환경
@@ -16,7 +18,7 @@ KAMIS 과일 소매가격과 기상청 날씨 자료를 이용하는 빅데이�
 ## 폴더와 담당
 
 ```text
-weather/                     # 저장소 이름; 로컬 checkout 폴더 이름은 자유
+team01/                      # 저장소 이름; 로컬 checkout 폴더 이름은 자유
 ├─ team01/                   # htdocs/team01에 배치할 PHP 앱 전체
 │  ├─ index.php              # 임시 진입 페이지
 │  ├─ config/                # DB 기본값, 공통 PDO 함수, 개인 설정
@@ -27,7 +29,7 @@ weather/                     # 저장소 이름; 로컬 checkout 폴더 이름�
 │  └─ assets/                # css, js, images
 ├─ sql/                      # 수령할 과제 DB 스크립트
 ├─ scripts/                  # CLI 연결 검사, 로컬 DB 준비
-└─ docs/                     # 구현 기준과 확인할 사항
+└─ documents/                # 팀원에게 공유하는 개발 안내
 ```
 
 | 담당 | 업무 |
@@ -48,8 +50,8 @@ weather/                     # 저장소 이름; 로컬 checkout 폴더 이름�
 팀원이 GitHub 접근 권한을 받은 후 실행합니다. 현재 최초 구성은 로컬 커밋만 하며 아직 업로드하지 않습니다.
 
 ```powershell
-git clone https://github.com/bigdata-team01/weather.git
-cd weather
+git clone https://github.com/bigdata-team01/team01.git
+cd team01
 $appPath = (Resolve-Path .\team01).Path
 New-Item -ItemType Junction -Path C:\xampp\htdocs\team01 -Target $appPath
 ```
@@ -127,8 +129,8 @@ DB 이름 `team01`, 포트, 문자셋, Prepared Statement 및 한글 왕복 검�
 DB 콘솔에서 실제 checkout 경로로 바꿔 실행합니다.
 
 ```sql
-SOURCE C:/your-checkout/weather/sql/dbcreate.sql;
-SOURCE C:/your-checkout/weather/sql/dbinsert.sql;
+SOURCE C:/your-checkout/team01/sql/dbcreate.sql;
+SOURCE C:/your-checkout/team01/sql/dbinsert.sql;
 ```
 
 ## 공통 PDO 사용
@@ -148,16 +150,16 @@ $rows = $statement->fetchAll();
 
 `bootstrap.php`는 세션을 시작하고 `db()`와 HTML 출력 이스케이프 함수 `e()`를 불러옵니다. 모든 페이지는 출력 전에 초기화하세요. 정렬 컬럼·집계 단계 같은 SQL 식별자는 바인딩할 수 없으므로 허용 목록으로 선택합니다. 웹 화면에는 DB 예외 원문이나 접속 정보를 노출하지 않습니다.
 
-분석 구현 전 [합의된 설계와 미해결 사항](docs/project-context.md)을 읽으세요.
+분석 구현 전 [팀원 개발 안내의 분석 구현 기준](documents/team-development-guide.md#분석-구현-기준)을 읽으세요.
 
 ## 로컬 검토와 커밋
 
 ```powershell
 git status
 git diff
-git add README.md team01 scripts sql docs .gitignore .gitattributes
+git add README.md team01 scripts sql documents .gitignore .gitattributes
 git diff --cached
 git commit -m "Describe the change"
 ```
 
-`plan/`, `plan-resources/`, 개인 `local.php`는 커밋하지 않습니다. 최초 구성 커밋은 로컬 검토용이며 푸시는 사용자가 검토한 후 별도로 진행합니다. 원격 저장소 읽기에 인증이 필요한 경우 로그인 후 `git fetch origin`으로 기존 이력을 확인하고 통합합니다. 강제 푸시는 하지 않습니다.
+`docs/`, `plan/`, `plan-resources/`, 개인 `local.php`는 커밋하지 않습니다. 공유 문서는 `documents/`에 작성합니다. 최초 구성 커밋은 로컬 검토용이며 푸시는 사용자가 검토한 후 별도로 진행합니다. 원격 저장소 읽기에 인증이 필요한 경우 로그인 후 `git fetch origin`으로 기존 이력을 확인하고 통합합니다. 강제 푸시는 하지 않습니다.
