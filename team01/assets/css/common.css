@@ -1,0 +1,8 @@
+/* 작성자: 김예원 — 초기 페이지용 최소 스타일. 최종 공통 UI는 이미소 담당. */
+:root { font-family: system-ui, sans-serif; color: #20352d; background: #f5f7f4; }
+body { margin: 0; line-height: 1.7; }
+main { max-width: 800px; margin: 64px auto; padding: 0 24px; }
+.eyebrow { color: #55715f; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.3; }
+section { margin-top: 32px; padding: 24px; background: white; border: 1px solid #dce4da; border-radius: 12px; }
+h2 { margin-top: 0; font-size: 1.2rem; }

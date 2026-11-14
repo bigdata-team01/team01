@@ -1,0 +1,15 @@
+# Local planning material (not application source)
+/docs/
+/plan/
+/plan-resources/
+
+# Per-developer database settings
+/team01/config/local.php
+
+# Local tools and editor files
+/.vscode/
+/.idea/
+*.log
+*.bak
+.DS_Store
+Thumbs.db
