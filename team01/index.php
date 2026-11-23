@@ -34,7 +34,7 @@ header('Content-Type: text/html; charset=UTF-8');
         <p>공통 PHP 실행 환경이 준비되었습니다. 분석 기능과 데이터는 아직 준비 중입니다.</p>
         <ul>
             <li>다중 그룹핑 집계</li>
-            <li>Rollup / Drill down</li>
+            <li><a href="analysis/rollup.php">Rollup / Drill down · 과일·시간 계층별 가격 집계</a></li>
             <li><a href="analysis/ranking.php">Ranking · 소비지역별 월평균 가격 순위</a></li>
             <li>Windowing</li>
             <li>데이터 조회·등록·수정·삭제 및 로그인</li>
