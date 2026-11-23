@@ -2,6 +2,15 @@
 
 `sql/dbcreate.sql` 기준 테이블 9개와 뷰 1개입니다. 회원 테이블은 독립적이며 품종별 대표 주산지 연결을 유지합니다.
 
+## 보고서용 이미지
+
+![최신 ERD](images/erd-after.png)
+
+[PNG 원본](images/erd-after.png) · [변경 전·후 비교](ERD-before-after.md)
+
+아래 Mermaid는 편집용 원본입니다. 이미지는 테이블 9개와 7개 FK 관계를 표현하며 뷰는 하단 설명을 참고하세요.
+
+
 ```mermaid
 erDiagram
     FRUIT_CATEGORY {
