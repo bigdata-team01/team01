@@ -17,7 +17,7 @@ if (is_string($id) && ctype_digit($id)) {
                     c.category_name, f.fruit_name, v.variety_name, v.unit, m.market_name,
                     a.area_name, a.station_type, a.station_id,
                     w.avg_temp, w.max_temp, w.min_temp, w.total_rain,
-                    w.heatwave_days, w.frost_days, w.heavy_rain_days, w.max_dry_streak, w.rainy_season_days
+                    w.heatwave_days, w.frost_days, w.heavy_rain_days, w.drought_level, w.rainy_season_days
              FROM PRICE_MONTHLY p
              JOIN FRUIT_VARIETY v ON v.variety_id = p.variety_id
              JOIN FRUIT f ON f.fruit_id = v.fruit_id
@@ -95,7 +95,8 @@ crud_page_start('가격 자료 상세');
                         <dt>폭염일수</dt><dd><?= weather_value($row['heatwave_days'], '일') ?></dd>
                         <dt>서리일수</dt><dd><?= weather_value($row['frost_days'], '일') ?></dd>
                         <dt>호우일수</dt><dd><?= weather_value($row['heavy_rain_days'], '일') ?></dd>
-                        <dt>최장 무강수</dt><dd><?= weather_value($row['max_dry_streak'], '일') ?></dd>
+                        <dt>가뭄 단계</dt><dd><?= weather_value($row['drought_level'], '단계') ?>
+                            <?php if ($row['drought_level'] !== null): ?><span class="muted">(SPI3, 0~3)</span><?php endif; ?></dd>
                         <dt>장마일수</dt><dd><?= weather_value($row['rainy_season_days'], '일') ?></dd>
                     </dl>
                 </section>
@@ -106,6 +107,7 @@ crud_page_start('가격 자료 상세');
                     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                     <input type="hidden" name="return" value="<?= e($backUrl) ?>">
                     <input type="hidden" name="ids[]" value="<?= e($row['price_id']) ?>">
+                    <a class="btn btn-light" href="price_update.php?id=<?= e($row['price_id']) ?>">수정</a>
                     <button type="submit" class="btn btn-danger"
                             onclick="return confirm('이 자료를 삭제할까요? 되돌릴 수 없습니다.');">이 자료 삭제</button>
                 </form>

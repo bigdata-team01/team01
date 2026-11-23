@@ -17,13 +17,13 @@ function crud_page_start(string $title): void
 
         body {
             margin: 0;
-            background: #fffaf4;
+            background: #f5f7f4;
             font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
-            color: #2b2b2b;
+            color: #20352d;
             font-size: 15px;
         }
 
-        a { color: #d9690b; }
+        a { color: #2f6b4f; }
 
         .topbar {
             display: flex;
@@ -31,9 +31,9 @@ function crud_page_start(string $title): void
             justify-content: space-between;
             padding: 14px 32px;
             background: #ffffff;
-            border-bottom: 1px solid #f3e3d0;
+            border-bottom: 1px solid #dce4da;
         }
-        .topbar .brand { font-weight: 700; color: #d9690b; text-decoration: none; }
+        .topbar .brand { font-weight: 700; color: #2f6b4f; text-decoration: none; }
         .topbar .user { font-size: 14px; color: #666666; }
         .topbar .user a { margin-left: 10px; font-weight: 600; text-decoration: none; }
 
@@ -43,9 +43,10 @@ function crud_page_start(string $title): void
         .subtitle { margin: 0 0 24px; color: #777777; font-size: 14px; }
 
         .card {
+            border: 1px solid #dce4da;
             background: #ffffff;
             border-radius: 14px;
-            box-shadow: 0 6px 20px rgba(160, 90, 20, 0.08);
+            box-shadow: 0 6px 20px rgba(32, 53, 45, 0.06);
             padding: 24px;
             margin-bottom: 20px;
         }
@@ -74,9 +75,9 @@ function crud_page_start(string $title): void
         }
         .field input:focus, .field select:focus {
             outline: none;
-            border-color: #e8770e;
+            border-color: #2f6b4f;
             background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(232, 119, 14, 0.18);
+            box-shadow: 0 0 0 3px rgba(47, 107, 79, 0.18);
         }
         .range { display: flex; align-items: center; gap: 6px; }
         .range span { color: #999999; }
@@ -94,10 +95,10 @@ function crud_page_start(string $title): void
             text-decoration: none;
             cursor: pointer;
         }
-        .btn-primary { background: #e8770e; color: #ffffff; }
-        .btn-primary:hover { background: #cc6406; }
-        .btn-light { background: #ffffff; border-color: #e5d5c3; color: #8a5a2b; }
-        .btn-light:hover { background: #fff3e6; }
+        .btn-primary { background: #2f6b4f; color: #ffffff; }
+        .btn-primary:hover { background: #24533d; }
+        .btn-light { background: #ffffff; border-color: #dce4da; color: #3d5a4a; }
+        .btn-light:hover { background: #eef3ec; }
         .btn-danger { background: #ffffff; border-color: #f2c4bf; color: #c0392b; }
         .btn-danger:hover { background: #fdecea; }
         .btn-sm { padding: 5px 10px; font-size: 13px; }
@@ -110,13 +111,13 @@ function crud_page_start(string $title): void
             margin-bottom: 12px;
         }
         .result-head .count { font-size: 14px; color: #666666; }
-        .result-head .count strong { color: #2b2b2b; }
+        .result-head .count strong { color: #20352d; }
         .result-head .tools { display: flex; align-items: center; gap: 10px; }
 
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { padding: 11px 10px; border-bottom: 1px solid #f1e6da; text-align: left; white-space: nowrap; }
-        th { background: #fff5ea; color: #8a5a2b; font-weight: 700; font-size: 13px; }
-        tbody tr:hover { background: #fffaf3; }
+        th, td { padding: 11px 10px; border-bottom: 1px solid #e6ece4; text-align: left; white-space: nowrap; }
+        th { background: #eef3ec; color: #3d5a4a; font-weight: 700; font-size: 13px; }
+        tbody tr:hover { background: #f8faf7; }
         td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
         td.check, th.check { width: 36px; text-align: center; }
         td.manage { text-align: right; }
@@ -126,8 +127,8 @@ function crud_page_start(string $title): void
             display: inline-block;
             padding: 2px 8px;
             border-radius: 999px;
-            background: #fff0de;
-            color: #b2560a;
+            background: #e3efe6;
+            color: #2f6b4f;
             font-size: 12px;
             font-weight: 700;
         }
@@ -143,15 +144,15 @@ function crud_page_start(string $title): void
             font-size: 14px;
             text-decoration: none;
         }
-        .pagination a { color: #8a5a2b; background: #ffffff; border: 1px solid #f0dfcc; }
-        .pagination a:hover { background: #fff3e6; }
-        .pagination .current { background: #e8770e; color: #ffffff; font-weight: 700; }
+        .pagination a { color: #3d5a4a; background: #ffffff; border: 1px solid #dce4da; }
+        .pagination a:hover { background: #eef3ec; }
+        .pagination .current { background: #2f6b4f; color: #ffffff; font-weight: 700; }
         .pagination .gap { color: #aaaaaa; }
 
         .message { margin: 0 0 20px; padding: 12px 16px; border-radius: 10px; font-size: 14px; }
         .message.success { background: #e8f5e9; color: #2e7d32; }
         .message.error { background: #fdecea; color: #b3261e; }
-        .message.info { background: #fff3e0; color: #8a5a2b; }
+        .message.info { background: #eef3ec; color: #3d5a4a; }
 
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         dl.info { display: grid; grid-template-columns: 120px 1fr; gap: 10px 12px; margin: 0; }
@@ -168,7 +169,7 @@ function crud_page_start(string $title): void
 </head>
 <body>
     <header class="topbar">
-        <a class="brand" href="list.php">이상기후와 과일 가격</a>
+        <a class="brand" href="../index.php">이상기후와 과일 가격</a>
         <div class="user">
             <?php if ($loginId !== null): ?>
                 <strong><?= e($loginId) ?></strong>님

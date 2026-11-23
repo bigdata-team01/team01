@@ -302,6 +302,9 @@ crud_page_start('가격 자료 검색');
                                         <a class="btn btn-light btn-sm"
                                            href="view.php?<?= e(http_build_query(['id' => $row['price_id'], 'return' => $currentUrl])) ?>">상세</a>
                                         <?php if ($loggedIn): ?>
+                                            <!-- 수정은 이혜령 님의 price_update.php로 연결 -->
+                                            <a class="btn btn-light btn-sm"
+                                               href="price_update.php?id=<?= e($row['price_id']) ?>">수정</a>
                                             <button type="submit" form="delete-<?= e($row['price_id']) ?>"
                                                     class="btn btn-danger btn-sm js-confirm-delete">삭제</button>
                                         <?php endif; ?>
