@@ -1,0 +1,81 @@
+erDiagram
+    FRUIT_CATEGORY {
+        int category_id PK
+        varchar category_name
+    }
+    PRODUCTION_AREA {
+        int area_id PK
+        varchar area_name
+        int station_id
+        enum station_type
+    }
+    MARKET_REGION {
+        int market_id PK
+        varchar market_name
+        varchar kamis_region_code
+    }
+    FRUIT {
+        int fruit_id PK
+        int category_id FK
+        varchar fruit_name
+        varchar kamis_item_code
+    }
+    FRUIT_CATEGORY ||--o{ FRUIT : "category_id"
+    FRUIT_VARIETY {
+        int variety_id PK
+        int fruit_id FK
+        int area_id FK
+        varchar variety_name
+        varchar kamis_kind_code
+        varchar unit
+    }
+    FRUIT ||--o{ FRUIT_VARIETY : "fruit_id"
+    PRODUCTION_AREA ||--o{ FRUIT_VARIETY : "area_id"
+    PRICE_MONTHLY {
+        int price_id PK
+        int variety_id FK
+        int market_id FK
+        date ym
+        smallint year
+        tinyint month
+        enum grade
+        int avg_price
+        int max_price
+        int min_price
+    }
+    FRUIT_VARIETY ||--o{ PRICE_MONTHLY : "variety_id"
+    MARKET_REGION ||--o{ PRICE_MONTHLY : "market_id"
+    WEATHER_MONTHLY {
+        int weather_id PK
+        int area_id FK
+        date ym
+        smallint year
+        tinyint month
+        decimal avg_temp
+        decimal max_temp
+        decimal min_temp
+        decimal total_rain
+        tinyint heatwave_days
+        tinyint frost_days
+        tinyint heavy_rain_days
+        tinyint drought_level
+        tinyint rainy_season_days
+    }
+    PRODUCTION_AREA ||--o{ WEATHER_MONTHLY : "area_id"
+    RAINY_SEASON {
+        int rainy_id PK
+        int area_id FK
+        smallint year
+        date start_date
+        date end_date
+        tinyint season_length_days
+        tinyint rain_days
+        decimal total_rain
+    }
+    PRODUCTION_AREA ||--o{ RAINY_SEASON : "area_id"
+    APP_USER {
+        int user_id PK
+        varchar login_id
+        varchar password_hash
+        datetime created_at
+    }
