@@ -26,9 +26,9 @@
 | `WEATHER_MONTHLY` | 1,056 | 8개 관측소 × 132개월 |
 | `RAINY_SEASON` | 88 | 8개 관측소 × 11년 |
 
-- `WEATHER_MONTHLY.total_rain`, `max_dry_streak`는 해당 정제본이 없어 NULL입니다.
+- `WEATHER_MONTHLY.drought_level`은 SPI3 기반 가뭄 단계(0~3)입니다. SPI3 자료가 없는 98개 월은 NULL입니다.
 - `frost_days`는 3~5월만 집계한 값이며 그 외 달은 0입니다.
-- 이 파일은 `../scripts/build-dbinsert.php`가 정제 CSV 8종을 검증해 생성합니다. 직접 고치지 말고 다시 생성하세요. CSV는 저장소에 포함하지 않습니다.
+- 이 파일은 `../scripts/build-dbinsert.php`가 정제 CSV 9종을 검증해 생성합니다. 직접 고치지 말고 다시 생성하세요. CSV는 저장소에 포함하지 않습니다.
 
 ```powershell
 & C:\xampp\php\php.exe .\scripts\build-dbinsert.php <정제 CSV 폴더>

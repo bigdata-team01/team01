@@ -1,5 +1,5 @@
 <?php
-// 작성자: 박시원 — 정제 CSV 8종을 검증하고 sql/dbinsert.sql을 생성하는 CLI 도구.
+// 작성자: 박시원 — 정제 CSV 9종을 검증하고 sql/dbinsert.sql을 생성하는 CLI 도구.
 // 사용: php scripts/build-dbinsert.php <CSV 폴더> [출력 파일]
 // DB에 접속하지 않으며 CSV 원본을 변경하지 않습니다.
 declare(strict_types=1);
@@ -78,11 +78,14 @@ function readCsv(string $dir, string $name, array $requiredColumns): array
     if ($handle === false) {
         fail("파일을 열 수 없습니다: $path");
     }
+    // UTF-8 BOM은 파싱 전에 건너뜁니다. 헤더가 따옴표로 시작해도 올바르게 읽기 위함입니다.
+    if (fread($handle, 3) !== "\xEF\xBB\xBF") {
+        rewind($handle);
+    }
     $header = fgetcsv($handle, null, ',', '"', '');
     if ($header === false || $header === [null]) {
         fail("$name: 헤더가 없습니다.");
     }
-    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]);
     $missing = array_diff($requiredColumns, $header);
     if ($missing) {
         fail("$name: 필요한 컬럼이 없습니다: " . implode(', ', $missing));
@@ -202,22 +205,28 @@ foreach (readCsv($csvDir, 'price_monthly_clean.csv', [
     ];
 }
 
-// ── WEATHER_MONTHLY (기온 + 이상기후 4종 병합) ───────────────────────────────
+// ── WEATHER_MONTHLY (기온 + 강수량 + 이상기후 5종 병합) ──────────────────────
 
-$monthlyColumns = ['station_type', 'station_id', 'ym', 'year', 'month'];
-
-/** @return array<string,array<string,string>> "지점|ym" => 행 */
-function monthlyByKey(string $dir, string $name, array $valueColumns): array
+/**
+ * 관측소·월 단위 CSV를 읽습니다. 강수량 정제본처럼 지점번호가 area_id 컬럼에 있으면
+ * $stationColumn으로 지정합니다(이 경우 station_type 컬럼은 없습니다).
+ *
+ * @return array<string,array<string,string>> "지점|ym" => 행
+ */
+function monthlyByKey(string $dir, string $name, array $valueColumns, string $stationColumn = 'station_id'): array
 {
-    global $monthlyColumns;
+    $hasStationType = $stationColumn === 'station_id';
+    $columns = array_merge($hasStationType ? ['station_type'] : [], [$stationColumn, 'ym', 'year', 'month']);
     $byKey = [];
-    foreach (readCsv($dir, $name, array_merge($monthlyColumns, $valueColumns)) as $i => $row) {
+    foreach (readCsv($dir, $name, array_merge($columns, $valueColumns)) as $i => $row) {
         $where = $name . ':' . ($i + 2);
-        if ($row['station_type'] !== 'ASOS' || !isset(AREAS[(int) $row['station_id']])) {
-            fail("$where: 기준표에 없는 관측소 {$row['station_type']} {$row['station_id']}");
+        $stationId = $row[$stationColumn];
+        if (($hasStationType && $row['station_type'] !== 'ASOS')
+            || !preg_match('/^[0-9]+$/D', $stationId) || !isset(AREAS[(int) $stationId])) {
+            fail("$where: 기준표에 없는 관측소 $stationId");
         }
         checkMonthRow($row, $where);
-        $key = $row['station_id'] . '|' . $row['ym'];
+        $key = (int) $stationId . '|' . $row['ym'];
         if (isset($byKey[$key])) {
             fail("$where: 관측소·월이 중복됩니다.");
         }
@@ -237,7 +246,9 @@ $dayCounts = [
         ['rainy_season_days']
     ),
 ];
-foreach ($dayCounts as $column => $rows) {
+$rainfall = monthlyByKey($csvDir, 'weather_monthly_rain_2015_2025_complete.csv', ['total_rain'], 'area_id');
+$drought = monthlyByKey($csvDir, 'drought_level_monthly_clean.csv', ['drought_level']);
+foreach ($dayCounts + ['total_rain' => $rainfall, 'drought_level' => $drought] as $column => $rows) {
     if (array_diff_key($temperature, $rows) || array_diff_key($rows, $temperature)) {
         fail("$column 자료의 관측소·월 구성이 기온 자료와 다릅니다.");
     }
@@ -255,15 +266,20 @@ foreach ($temperature as $key => $row) {
     }
     [$y, $m] = dateParts($row['ym'], $where);
     $daysInMonth = (int) date('t', mktime(0, 0, 0, $m, 1, $y));
+    $totalRain = decimalValue($rainfall[$key]['total_rain'], "total_rain [$key]");
+    if ((float) $totalRain < 0) {
+        fail("total_rain [$key]: 합계강수량이 음수입니다.");
+    }
     $tuple = [
         (string) (int) $row['station_id'], sqlString($row['ym']), (string) $y, (string) $m,
-        $avg, $max, $min,
-        'NULL', // total_rain: 월 합계강수량 정제본이 없습니다.
+        $avg, $max, $min, $totalRain,
     ];
     foreach (['heatwave_days', 'frost_days', 'heavy_rain_days'] as $column) {
         $tuple[] = (string) intValue($dayCounts[$column][$key][$column], "$column [$key]", 0, $daysInMonth);
     }
-    $tuple[] = 'NULL'; // max_dry_streak: 정제본은 SPI3 가뭄 단계라 이 컬럼과 의미가 다릅니다.
+    // SPI3 가뭄 단계 0~3. 정제본의 빈칸은 SPI3 자료가 없는 달이므로 NULL로 둡니다.
+    $level = $drought[$key]['drought_level'];
+    $tuple[] = $level === '' ? 'NULL' : (string) intValue($level, "drought_level [$key]", 0, 3);
     $tuple[] = (string) intValue(
         $dayCounts['rainy_season_days'][$key]['rainy_season_days'],
         "rainy_season_days [$key]",
@@ -317,7 +333,7 @@ $sql = <<<SQL
 -- dbcreate.sql을 적용한 빈 테이블에 한 번만 실행합니다. DB명/계정은 이 파일에 고정하지 않습니다.
 -- 예: mysql -u 사용자 -p team01 < dbinsert.sql
 -- 다시 넣으려면 dbdrop.sql → dbcreate.sql → dbinsert.sql 순서로 실행하세요.
--- WEATHER_MONTHLY.total_rain, max_dry_streak는 해당 정제본이 없어 NULL입니다.
+-- WEATHER_MONTHLY.drought_level의 NULL은 SPI3 자료가 없는 달입니다.
 SET NAMES utf8mb4;
 START TRANSACTION;
 
@@ -366,7 +382,7 @@ $sql .= insertStatements(
 $sql .= insertStatements(
     'WEATHER_MONTHLY',
     ['area_id', 'ym', 'year', 'month', 'avg_temp', 'max_temp', 'min_temp', 'total_rain',
-        'heatwave_days', 'frost_days', 'heavy_rain_days', 'max_dry_streak', 'rainy_season_days'],
+        'heatwave_days', 'frost_days', 'heavy_rain_days', 'drought_level', 'rainy_season_days'],
     $weatherTuples
 );
 
