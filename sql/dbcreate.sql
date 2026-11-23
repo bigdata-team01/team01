@@ -158,7 +158,6 @@ JOIN MARKET_REGION m ON p.market_id = m.market_id
 JOIN PRODUCTION_AREA a ON v.area_id = a.area_id
 LEFT JOIN WEATHER_MONTHLY w ON w.area_id = a.area_id AND w.ym = p.ym;
 
-
 -- 로그인용 회원 테이블 (작성: 유채은)
 CREATE TABLE APP_USER (
     user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,

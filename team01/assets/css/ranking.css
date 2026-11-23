@@ -1,0 +1,18 @@
+/* 작성자: 박선영 — Ranking 분석 화면 전용 스타일. */
+.ranking-page { max-width: 1100px; }
+.filter-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: end; }
+.field label { display: block; margin-bottom: 6px; font-weight: 700; }
+.field input, .field select { width: 100%; min-height: 44px; padding: 8px 10px; box-sizing: border-box; border: 1px solid #9aada0; border-radius: 6px; background: #fff; color: inherit; font: inherit; }
+.filter-grid button { min-height: 44px; padding: 8px 18px; border: 0; border-radius: 6px; background: #285d42; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.filter-grid button:hover { background: #1e4932; }
+.result-summary { color: #4a6053; }
+.notice, .errors { padding: 14px 16px; border: 1px solid #8ba998; border-radius: 6px; background: #edf5ee; }
+.errors { color: #842d27; border-color: #bd7771; background: #fff0ec; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 11px 10px; text-align: left; border-bottom: 1px solid #dce4da; white-space: nowrap; }
+th { background: #edf3ee; }
+.number { text-align: right; font-variant-numeric: tabular-nums; }
+.rank { color: #285d42; }
+:focus-visible { outline: 3px solid #9b6a18; outline-offset: 3px; }
+@media (max-width: 760px) { .filter-grid { grid-template-columns: 1fr; } .filter-grid button { width: 100%; } }

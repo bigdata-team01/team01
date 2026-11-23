@@ -1,6 +1,6 @@
 # DB 스크립트
 
-아직 `dbcreate.sql`을 전달받지 않았습니다. 이 폴더에는 스키마를 임의로 만들거나 빈 SQL 파일을 완성본처럼 추가하지 않습니다.
+`dbcreate.sql`과 `dbdrop.sql`이 준비되어 있습니다. 최종 데이터 통합 후 `dbinsert.sql`과 `dbdump.sql`을 함께 검증합니다.
 
 | 예정 파일 | 담당 / 용도 |
 | --- | --- |
@@ -9,6 +9,6 @@
 | `dbdrop.sql` | 박선영 — 초기화용 삭제 스크립트 |
 | `dbdump.sql` | 박선영 — 최종 DB 덤프 |
 
-파일을 받은 후 기존 데이터 삭제 여부를 확인하고 `drop → create → insert` 순서로 검증합니다. `dbdrop.sql`은 데이터가 삭제되는 작업이므로 기존 DB에 무심코 실행하지 않습니다.
+`dbdrop.sql`은 데이터가 삭제되는 작업이므로 기존 DB에 무심코 실행하지 않습니다. 최종 데이터가 준비되면 `../scripts/create-dbdump.ps1`로 구조·데이터·뷰를 포함한 `dbdump.sql`을 만들고, 별도 테스트 DB에서 `drop → create → insert`와 덤프 복원을 검증합니다.
 
 `../scripts/setup-local-db.sql`은 로컬 DB와 계정만 생성하는 준비용 스크립트이며 과제 제출용 `dbcreate.sql`을 대체하지 않습니다.
