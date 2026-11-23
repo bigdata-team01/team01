@@ -36,7 +36,7 @@ header('Content-Type: text/html; charset=UTF-8');
             <li>다중 그룹핑 집계</li>
             <li>Rollup / Drill down</li>
             <li><a href="analysis/ranking.php">Ranking · 소비지역별 월평균 가격 순위</a></li>
-            <li>Windowing</li>
+            <li><a href="analysis/windowing.php">Windowing · 가격 흐름과 주산지 이상기후</a></li>
             <li>데이터 조회·등록·수정·삭제 및 로그인</li>
         </ul>
     </section>

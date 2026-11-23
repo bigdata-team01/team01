@@ -1,0 +1,14 @@
+/* 작성자: 박시원 — Windowing 분석 화면 전용 스타일. 폼·표 기본 모양은 ranking.css를 함께 사용합니다. */
+.windowing-page { max-width: 1280px; }
+.windowing-page .filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.windowing-page th, .windowing-page td { padding: 10px 7px; font-size: 0.94rem; }
+.windowing-page thead th { vertical-align: bottom; }
+.windowing-page th.group, .windowing-page td.group { border-left: 2px solid #c5d3c7; }
+.windowing-page thead tr:first-child th.group { text-align: center; }
+.up { color: #a3352b; }
+.down { color: #1f5a8a; }
+.alert { color: #a3352b; font-weight: 700; }
+.muted { color: #6b7d72; font-weight: 400; }
+.notes { margin: 0; padding-left: 20px; }
+.notes li + li { margin-top: 6px; }
+@media (max-width: 760px) { .windowing-page .filter-grid { grid-template-columns: 1fr; } }
