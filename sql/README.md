@@ -1,6 +1,6 @@
 # DB 스크립트
 
-`dbcreate.sql`, `dbinsert.sql`, `dbdrop.sql`이 준비되어 있습니다. 최종 `dbdump.sql`은 통합 데이터 확정 후 생성·검증합니다.
+`dbcreate.sql`, `dbinsert.sql`, `dbdrop.sql`, `dbdump.sql`이 준비되어 있습니다.
 
 | 예정 파일 | 담당 / 용도 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | `dbdrop.sql` | 박선영 — 초기화용 삭제 스크립트 |
 | `dbdump.sql` | 박선영 — 최종 DB 덤프 |
 
-`dbdrop.sql`은 데이터가 삭제되는 작업이므로 기존 DB에 무심코 실행하지 않습니다. 최종 데이터가 준비되면 `../scripts/create-dbdump.ps1`로 구조·데이터·뷰를 포함한 `dbdump.sql`을 만들고, 별도 테스트 DB에서 `drop → create → insert`와 덤프 복원을 검증합니다.
+`dbdrop.sql`은 데이터가 삭제되는 작업이므로 기존 DB에 무심코 실행하지 않습니다. `dbdump.sql`은 통합 데이터가 적용된 DB에서 `../scripts/create-dbdump.ps1`로 생성했으며 구조·데이터·뷰를 포함합니다. XAMPP MariaDB 10.11.16에서 `drop → create → insert`와 별도 DB 덤프 복원을 검증했습니다.
 
 `../scripts/setup-local-db.sql`은 로컬 DB와 계정만 생성하는 준비용 스크립트이며 과제 제출용 `dbcreate.sql`을 대체하지 않습니다.
 
@@ -29,6 +29,15 @@
 - `WEATHER_MONTHLY.drought_level`은 SPI3 기반 가뭄 단계(0~3)입니다. SPI3 자료가 없는 98개 월은 NULL입니다.
 - `frost_days`는 3~5월만 집계한 값이며 그 외 달은 0입니다.
 - 이 파일은 `../scripts/build-dbinsert.php`가 정제 CSV 9종을 검증해 생성합니다. 직접 고치지 말고 다시 생성하세요. CSV는 저장소에 포함하지 않습니다.
+
+## dbdump.sql
+
+- 9개 테이블의 구조와 데이터, `v_price_weather` 뷰를 포함합니다.
+- `APP_USER` 테이블 구조는 포함하지만 최종 생성 시 사용자 데이터는 0건입니다.
+- 복원 결과는 `dbinsert.sql` 적용 결과와 행 수 및 핵심 합계가 일치합니다.
+- 뷰는 `SQL SECURITY INVOKER`로 저장되어 생성자의 로컬 DB 계정에 의존하지 않으며, 일반 `team01` 계정 복원을 검증했습니다.
+- 덤프에는 `CREATE DATABASE`와 `USE`가 없으므로 복원할 빈 DB를 선택한 뒤 실행합니다.
+- 덤프 복원 후 같은 데이터를 `dbinsert.sql`로 다시 넣지 않습니다.
 
 ```powershell
 & C:\xampp\php\php.exe .\scripts\build-dbinsert.php <정제 CSV 폴더>

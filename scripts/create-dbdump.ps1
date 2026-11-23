@@ -37,4 +37,14 @@ if ($LASTEXITCODE -ne 0) {
     throw "mysqldump 실행 실패: 종료 코드 $LASTEXITCODE"
 }
 
+$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+$dumpText = [System.IO.File]::ReadAllText($resolvedOutput, $utf8WithoutBom)
+$dumpText = [regex]::Replace(
+    $dumpText,
+    '/\*!50013 DEFINER=`[^`]+`@`[^`]+` SQL SECURITY DEFINER \*/',
+    '/*!50013 SQL SECURITY INVOKER */'
+)
+$dumpText = [regex]::Replace($dumpText, '[ \t]+(?=\r?$)', '', 'Multiline')
+[System.IO.File]::WriteAllText($resolvedOutput, $dumpText, $utf8WithoutBom)
+
 Write-Host "덤프 생성 완료: $resolvedOutput"
