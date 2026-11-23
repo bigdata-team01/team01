@@ -94,7 +94,7 @@ CREATE TABLE WEATHER_MONTHLY (
     heatwave_days TINYINT UNSIGNED NULL,
     frost_days TINYINT UNSIGNED NULL,
     heavy_rain_days TINYINT UNSIGNED NULL,
-    max_dry_streak TINYINT UNSIGNED NULL,
+    drought_level TINYINT UNSIGNED NULL COMMENT 'SPI3 기반 가뭄 단계 0~3; 미확보는 NULL',
     rainy_season_days TINYINT UNSIGNED NULL,
     PRIMARY KEY (weather_id),
     UNIQUE KEY uq_weather_month (area_id, ym),
@@ -109,11 +109,11 @@ CREATE TABLE WEATHER_MONTHLY (
         min_temp <= max_temp AND min_temp <= avg_temp AND avg_temp <= max_temp
     ),
     CONSTRAINT ck_weather_rain CHECK (total_rain >= 0),
+    CONSTRAINT ck_weather_drought CHECK (drought_level BETWEEN 0 AND 3),
     CONSTRAINT ck_weather_days CHECK (
         heatwave_days BETWEEN 0 AND DAYOFMONTH(LAST_DAY(ym))
         AND frost_days BETWEEN 0 AND DAYOFMONTH(LAST_DAY(ym))
         AND heavy_rain_days BETWEEN 0 AND DAYOFMONTH(LAST_DAY(ym))
-        AND max_dry_streak BETWEEN 0 AND DAYOFMONTH(LAST_DAY(ym))
         AND rainy_season_days BETWEEN 0 AND DAYOFMONTH(LAST_DAY(ym))
     )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -149,7 +149,7 @@ SELECT
     m.market_name, a.area_name,
     w.avg_temp, w.max_temp, w.min_temp, w.total_rain,
     w.heatwave_days, w.frost_days, w.heavy_rain_days,
-    w.max_dry_streak, w.rainy_season_days
+    w.drought_level, w.rainy_season_days
 FROM PRICE_MONTHLY p
 JOIN FRUIT_VARIETY v ON p.variety_id = v.variety_id
 JOIN FRUIT f ON v.fruit_id = f.fruit_id
