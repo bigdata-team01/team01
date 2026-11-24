@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: linear-gradient(135deg, #fff7ea 0%, #ffeedb 50%, #fff9ef 100%);
+            background: #f5f7f4;
             font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
-            color: #2b2b2b;
+            color: #20352d;
         }
 
         .auth-card {
@@ -64,8 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             max-width: 380px;
             padding: 40px 32px 32px;
             background: #ffffff;
+            border: 1px solid #dce4da;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(160, 90, 20, 0.13);
+            box-shadow: 0 10px 30px rgba(32, 53, 45, 0.08);
         }
 
         .auth-brand {
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.04em;
-            color: #d9690b;
+            color: #2f6b4f;
         }
 
         .auth-title {
@@ -109,9 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .auth-field input:focus {
             outline: none;
-            border-color: #e8770e;
+            border-color: #2f6b4f;
             background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(232, 119, 14, 0.2);
+            box-shadow: 0 0 0 3px rgba(47, 107, 79, 0.18);
         }
 
         .auth-button {
@@ -120,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 13px;
             border: none;
             border-radius: 10px;
-            background: #e8770e;
+            background: #2f6b4f;
             color: #ffffff;
             font-size: 16px;
             font-weight: 700;
@@ -130,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .auth-button:hover {
-            background: #cc6406;
+            background: #24533d;
         }
 
         .auth-message {
@@ -160,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .auth-footer a {
             margin-left: 4px;
-            color: #e8770e;
+            color: #2f6b4f;
             font-weight: 600;
             text-decoration: none;
         }

@@ -25,6 +25,7 @@ header('Content-Type: text/html; charset=UTF-8');
             <p>가격 등록·수정은 로그인 후 이용할 수 있습니다. <a href="auth/login.php">로그인</a> · <a href="auth/register.php">회원가입</a></p>
         <?php endif; ?>
         <ul>
+            <li><a href="crud/list.php">가격 자료 검색·상세·삭제</a></li><!-- 유채은 -->
             <li><a href="crud/price_insert.php">새 가격 등록</a></li>
             <li><a href="crud/price_edit_list.php">기존 가격 수정</a></li>
         </ul>
