@@ -62,9 +62,23 @@ $hasData = array_sum(array_column($rows, 'row_count')) > 0;
     <link rel="stylesheet" href="../assets/css/common.css">
     <link rel="stylesheet" href="../assets/css/rollup.css">
 </head>
-<body>
+<body class="rollup-page">
+<header class="rollup-topbar">
+    <a class="brand" href="../index.php">이상기후와 과일 가격</a>
+    <nav aria-label="서비스 메뉴">
+        <a href="ranking.php">Ranking</a>
+        <?php if (is_file(dirname(__DIR__) . '/crud/list.php')): ?>
+            <a href="../crud/list.php">가격 자료 검색</a>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <span><?= e((string) ($_SESSION['login_id'] ?? '사용자')) ?>님</span>
+            <a href="../auth/logout.php">로그아웃</a>
+        <?php else: ?>
+            <a href="../auth/login.php">로그인</a>
+        <?php endif; ?>
+    </nav>
+</header>
 <main>
-    <a href="../index.php">← 메인</a>
     <p class="eyebrow">과일 가격 · 계층별 분석</p>
     <h1>Rollup / Drill-down</h1>
     <p>과일군 → 품목 → 품종 또는 연도 → 월 순서로 상세 가격을 살펴보세요.</p>
@@ -92,8 +106,10 @@ $hasData = array_sum(array_column($rows, 'row_count')) > 0;
             <input type="hidden" name="category" value="<?= e($state['category']) ?>">
             <input type="hidden" name="fruit" value="<?= e($state['fruit']) ?>">
             <input type="hidden" name="year" value="<?= e($state['year']) ?>">
-            <button type="submit">조회</button>
-            <a href="rollup.php">조건 초기화</a>
+            <div class="rollup-actions">
+                <button type="submit">조회</button>
+                <a class="reset-button" href="rollup.php">조건 초기화</a>
+            </div>
         </form>
         <p class="note">서로 다른 거래 단위와 등급은 섞지 않습니다. 평균 가격은 선택 기간의 품종·도시별 월평균 가격을 동일 가중치로 평균한 값입니다. 거래량 가중 평균이나 일별 가격 전체의 평균이 아닙니다.</p>
     </section>
