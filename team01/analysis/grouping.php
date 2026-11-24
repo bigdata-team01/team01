@@ -6,15 +6,26 @@ require_once dirname(__DIR__) . '/includes/bootstrap.php';
 header('Content-Type: text/html; charset=UTF-8');
 
 const ALLOWED_GROUPS = [
-    'year'          => '연도',
-    'month'         => '월',
-    'category_name' => '카테고리',
     'fruit_name'    => '과일',
     'variety_name'  => '품종',
+    'year'          => '연도',
+    'month'         => '월',
     'grade'         => '등급',
     'market_name'   => '소비지역',
     'area_name'     => '생산지역',
 ];
+
+const ALLOWED_CLIMATE = [
+    'all'          => '전체 기간',
+    'heatwave'     => '폭염 발생 월',
+    'frost'        => '봄철 저온 발생 월',
+    'heavy_rain'   => '집중호우 발생 월',
+    'drought'      => '가뭄 발생 월',
+    'rainy_season' => '이상 장마 발생 월',
+];
+
+$climateRaw    = is_string($_GET['climate'] ?? null) ? trim($_GET['climate']) : 'all';
+$climateFilter = array_key_exists($climateRaw, ALLOWED_CLIMATE) ? $climateRaw : 'all';
 
 $selectedGroups = [];
 if (isset($_GET['groups']) && is_array($_GET['groups'])) {
@@ -54,6 +65,13 @@ $yearRangeError = !$yearInputError
     && $yearTo !== null
     && $yearFrom > $yearTo;
 
+// 표시용 그룹핑 소섹션 (name/value/로직 무관, UI 렌더링 전용)
+$groupSections = [
+    '품목' => ['fruit_name', 'variety_name', 'grade'],
+    '기간' => ['year', 'month'],
+    '지역' => ['market_name', 'area_name'],
+];
+
 $rows      = [];
 $error     = false;
 $submitted = !empty($selectedGroups)
@@ -87,8 +105,24 @@ if ($submitted) {
                 MAX(avg_price)               AS max_price,
                 MIN(avg_price)               AS min_price,
                 ROUND(AVG(avg_temp), 1)      AS avg_temp,
-                ROUND(AVG(total_rain), 1)    AS avg_rain
-            FROM v_price_weather
+                ROUND(AVG(total_rain), 1)    AS avg_rain,
+                MAX(CASE WHEN heatwave_days >= 1 THEN 1 ELSE 0 END)  AS heatwave_hit,
+                MAX(CASE WHEN frost_days >= 1 THEN 1 ELSE 0 END)      AS frost_hit,
+                MAX(CASE WHEN heavy_rain_days >= 1 THEN 1 ELSE 0 END) AS heavy_rain_hit,
+                MAX(CASE WHEN drought_level >= 1 THEN 1 ELSE 0 END)   AS drought_hit,
+                MAX(CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM RAINY_SEASON rs
+                    JOIN PRODUCTION_AREA pa ON rs.area_id = pa.area_id
+                    WHERE pa.area_name = vpw.area_name
+                      AND rs.year      = vpw.year
+                      AND vpw.ym BETWEEN rs.start_date AND rs.end_date
+                      AND rs.rain_days >= CASE
+                          WHEN pa.area_name IN ('서귀포','안동','장수','영주','영천') THEN 23
+                          ELSE 24
+                      END
+                ) THEN 1 ELSE 0 END)                                   AS rainy_season_hit
+            FROM v_price_weather vpw
             {$where}
             GROUP BY {$groupCols}
             ORDER BY {$groupCols}
@@ -115,9 +149,9 @@ if ($submitted) {
 </head>
 <body>
 <main class="grouping-page">
-    <p class="eyebrow">고급 분석 · 다중 그룹핑</p>
+    <p class="eyebrow">그룹핑</p>
     <a href="../index.php">← 메인으로</a>
-    <h1>다중 그룹핑 집계</h1>
+    <h1>그룹핑 집계</h1>
     <p>그룹핑 기준을 여러 개 선택하면 해당 조합별로 가격과 기상 집계를 보여줍니다.</p>
 
     <section>
@@ -125,23 +159,26 @@ if ($submitted) {
         <form method="get">
             <fieldset class="group-checks">
                 <legend>그룹 기준 <span class="required">(1개 이상 선택)</span></legend>
-                <div class="checks-grid">
-                    <?php foreach (ALLOWED_GROUPS as $col => $label): ?>
-                        <label class="check-label">
-                            <input
-                                type="checkbox"
-                                name="groups[]"
-                                value="<?= e($col) ?>"
-                                <?= in_array($col, $selectedGroups, true) ? 'checked' : '' ?>
-                            >
-                            <?= e($label) ?>
-                        </label>
-                    <?php endforeach; ?>
-                </div>
+                <?php foreach ($groupSections as $sectionLabel => $cols): ?>
+                    <div class="group-section">
+                        <span class="group-sub-label"><?= e($sectionLabel) ?></span>
+                        <div class="checks-inline">
+                            <?php foreach ($cols as $col): ?>
+                                <label class="check-label">
+                                    <input
+                                        type="checkbox"
+                                        name="groups[]"
+                                        value="<?= e($col) ?>"
+                                        <?= in_array($col, $selectedGroups, true) ? 'checked' : '' ?>
+                                    >
+                                    <?= e(ALLOWED_GROUPS[$col]) ?>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </fieldset>
 
-            <p class="agg-note">집계 항목: 건수 · 평균가격 합계(원) · 평균가격(원) · 최고 평균가격(원) · 최저 평균가격(원) · 평균기온(℃) · 평균 월강수량(mm)</p>
-            <p class="agg-note">연도<?= $dbYearMin !== null ? ': ' . e((string)$dbYearMin) . '~' . e((string)$dbYearMax) . '년' : '' ?> · 비워 두면 전체 기간 조회</p>
             <div class="filter-row">
                 <div class="field">
                     <label for="year_from">연도 시작</label>
@@ -160,6 +197,29 @@ if ($submitted) {
             <?php if ($yearInputError): ?>
                 <p class="warn-note" role="alert">연도는 4자리 숫자로 입력해주세요.</p>
             <?php endif; ?>
+
+            <p class="agg-note">연도<?= $dbYearMin !== null ? ': ' . e((string)$dbYearMin) . '~' . e((string)$dbYearMax) . '년' : '' ?> · 비워 두면 전체 기간 조회</p>
+            <p class="agg-note">집계 항목: 건수 · 평균가격 합계(원) · 평균가격(원) · 최고 평균가격(원) · 최저 평균가격(원) · 평균기온(℃) · 평균 월강수량(mm)</p>
+            
+            <hr class="form-divider">
+
+            <fieldset class="climate-checks">
+                <legend>이상기후 조건 <span class="required">(1개 선택)</span></legend>
+                <div class="climate-radios">
+                    <?php foreach (ALLOWED_CLIMATE as $val => $label): ?>
+                        <label class="check-label">
+                            <input
+                                type="radio"
+                                name="climate"
+                                value="<?= e($val) ?>"
+                                <?= $climateFilter === $val ? 'checked' : '' ?>
+                            >
+                            <?= e($label) ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
+            <p class="agg-note climate-note">※ 이상기후 조건은 조회 후 즉시 전환할 수 있습니다. 해당 조건이 발생한 그룹 행이 강조 표시됩니다.</p>            
         </form>
     </section>
 
@@ -177,7 +237,7 @@ if ($submitted) {
             <p class="result-summary">
                 그룹 기준:
                 <strong><?= e(implode(' + ', array_map(fn($c) => ALLOWED_GROUPS[$c], $selectedGroups))) ?></strong>
-                · <?= count($rows) ?>개 그룹 (최대 1000)
+                · <?= count($rows) ?>개 그룹 (최대 1000)<span id="climate-status"></span>
             </p>
             <div class="table-scroll" tabindex="0" role="region" aria-label="다중 그룹핑 집계 결과">
                 <table>
@@ -197,7 +257,11 @@ if ($submitted) {
                     </thead>
                     <tbody>
                     <?php foreach ($rows as $row): ?>
-                        <tr>
+                        <tr data-heatwave="<?= (int)($row['heatwave_hit'] ?? 0) ?>"
+                            data-frost="<?= (int)($row['frost_hit'] ?? 0) ?>"
+                            data-heavy-rain="<?= (int)($row['heavy_rain_hit'] ?? 0) ?>"
+                            data-drought="<?= (int)($row['drought_hit'] ?? 0) ?>"
+                            data-rainy-season="<?= (int)($row['rainy_season_hit'] ?? 0) ?>">
                             <?php foreach ($selectedGroups as $col): ?>
                                 <td><?= e((string)($row[$col] ?? '')) ?></td>
                             <?php endforeach; ?>
@@ -220,6 +284,45 @@ if ($submitted) {
             <?php endif; ?>
         <?php endif; ?>
     </section>
+<script>
+(function () {
+    var attrMap = {
+        heatwave:     'data-heatwave',
+        frost:        'data-frost',
+        heavy_rain:   'data-heavy-rain',
+        drought:      'data-drought',
+        rainy_season: 'data-rainy-season',
+    };
+    var labels = <?= json_encode(ALLOWED_CLIMATE, JSON_UNESCAPED_UNICODE) ?>;
+    var statusEl = document.getElementById('climate-status');
+
+    function applyHighlight(value) {
+        var trs = document.querySelectorAll('tbody tr');
+        var count = 0;
+        trs.forEach(function (tr) {
+            if (value === 'all') {
+                tr.classList.remove('row-climate');
+            } else {
+                var hit = tr.getAttribute(attrMap[value]) === '1';
+                tr.classList.toggle('row-climate', hit);
+                if (hit) count++;
+            }
+        });
+        if (statusEl) {
+            statusEl.textContent = value === 'all'
+                ? ''
+                : ' · 이상기후 조건: ' + labels[value] + ' — ' + count + '개 그룹 강조';
+        }
+    }
+
+    document.querySelectorAll('input[name="climate"]').forEach(function (radio) {
+        radio.addEventListener('change', function () { applyHighlight(this.value); });
+    });
+
+    var checked = document.querySelector('input[name="climate"]:checked');
+    if (checked) applyHighlight(checked.value);
+}());
+</script>
 </main>
 </body>
 </html>
