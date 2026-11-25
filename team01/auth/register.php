@@ -204,3 +204,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="password_confirm">비밀번호 확인</label>
                 <input type="password" id="password_confirm" name="password_confirm" required>
             </div>
+                        <button type="submit" class="auth-button">회원가입하기</button>
+        </form>
+
+        <p class="auth-footer">이미 계정이 있나요?<a href="login.php">로그인</a></p>
+    </main>
+</body>
+</html>
