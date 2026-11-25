@@ -15,7 +15,7 @@ function crud_page_start(string $title): void
     require_once dirname(__DIR__) . '/includes/layout_open.php';
     ?>
     <style>
-        .container { padding: 8px 0 48px; }
+        .container { padding: 0 0 48px; }
 
         h1 { margin: 0 0 6px; font-size: 26px; }
         .subtitle { margin: 0 0 24px; color: #777777; font-size: 14px; }

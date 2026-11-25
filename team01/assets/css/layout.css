@@ -522,3 +522,174 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════
+   공통 콘텐츠 UI 통일
+   ═══════════════════════════════════════════ */
+
+/* 페이지 제목 */
+.content-area .page-desc {
+  font-size: 0.9rem;
+  color: #55715f;
+  margin: 0 0 14px;
+}
+
+.content-area h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  color: #20352d;
+}
+
+/* 카드/섹션 */
+.content-area section {
+  background: #fff;
+  border: 1px solid #dce4da;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 0 0 24px;
+  box-shadow: none;
+}
+
+.content-area section h2 {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  color: #20352d;
+  margin: 0 0 16px;
+}
+
+/* 폼 필드 */
+.content-area .field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3d5a4a;
+  margin-bottom: 6px;
+}
+
+.content-area .field input,
+.content-area .field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border: 1px solid #9aada0;
+  border-radius: 8px;
+  background: #fff;
+  color: #20352d;
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.content-area .field select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2355715f' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.content-area .field input:focus,
+.content-area .field select:focus {
+  outline: none;
+  border-color: #285d42;
+  box-shadow: 0 0 0 3px rgba(40, 93, 66, 0.15);
+}
+
+/* section 안에 직접 들어온 form의 위쪽 margin 제거 (price-form.css 충돌 방지) */
+.content-area section > form {
+  margin-top: 0;
+}
+
+/* 버튼 클래스 */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #285d42;
+  color: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #1e4932; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 20px;
+  border: 1px solid #dce4da;
+  border-radius: 8px;
+  background: #fff;
+  color: #3d5a4a;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn-secondary:hover { background: #eef3ec; }
+
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid #9aada0;
+  border-radius: 6px;
+  background: #fff;
+  color: #285d42;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-edit:hover { background: #eef3ec; border-color: #285d42; }
+
+/* 공통 테이블 */
+.content-area table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.content-area th {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 11px 10px;
+  text-align: left;
+  border-bottom: 1px solid #dce4da;
+  white-space: nowrap;
+}
+
+.content-area thead th {
+  background: #edf3ee;
+  color: #3d5a4a;
+}
+
+.content-area td {
+  padding: 11px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e6ece4;
+  white-space: nowrap;
+}
+
+.content-area tbody tr:hover { background: #f8faf7; }
+
+.content-area .number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.content-area .table-scroll { overflow-x: auto; }

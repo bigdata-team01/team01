@@ -1,7 +1,4 @@
 /* 작성자: 이미소 — 다중 그룹핑 집계 화면 전용 스타일. */
-.grouping-page {
-  max-width: 1200px;
-}
 
 /* 체크박스 그룹 */
 .group-checks {
@@ -64,37 +61,21 @@
   gap: 16px;
   align-items: end;
 }
-.field label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-.field input {
-  width: 100%;
-  min-height: 44px;
-  padding: 8px 10px;
-  box-sizing: border-box;
-  border: 1px solid #9aada0;
-  border-radius: 6px;
-  background: #fff;
-  color: inherit;
-  font: inherit;
-}
 .filter-row button {
   min-height: 44px;
   padding: 8px 24px;
-  border: 0;
-  border-radius: 6px;
+  border: none;
+  border-radius: 8px;
   background: #285d42;
   color: #fff;
   font: inherit;
+  font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.15s;
 }
-.filter-row button:hover {
-  background: #1e4932;
-}
+.filter-row button:hover { background: #1e4932; }
 
 .form-divider {
   border: none;
@@ -137,10 +118,10 @@
   margin-top: 12px;
   padding: 10px 14px;
   border: 1px solid #c9a227;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fffbe6;
   color: #7a5500;
-  font-size: 0.9em;
+  font-size: 0.875rem;
 }
 .table-note {
   margin: 6px 0 0;
@@ -151,42 +132,24 @@
 /* 결과 */
 .result-summary {
   color: #4a6053;
+  margin: 0 0 12px;
 }
 .notice,
 .errors {
   padding: 14px 16px;
   border: 1px solid #8ba998;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #edf5ee;
+  font-size: 0.875rem;
+  margin: 0 0 16px;
 }
 .errors {
   color: #842d27;
   border-color: #bd7771;
   background: #fff0ec;
 }
-.table-scroll {
-  overflow-x: auto;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th,
-td {
-  padding: 11px 10px;
-  text-align: left;
-  border-bottom: 1px solid #dce4da;
-  white-space: nowrap;
-}
-th {
-  background: #edf3ee;
-}
 tr.row-climate td {
   background: #f0f9f1;
-}
-.number {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
 }
 
 :focus-visible {

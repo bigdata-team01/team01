@@ -194,8 +194,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 <link rel="stylesheet" href="../assets/css/windowing.css">
 <div class="windowing-page">
 
-    <h1>가격 흐름과 주산지 이상기후</h1>
-    <p>한 품종의 월평균 가격을 3개월 이동평균, 전월·전년 동월 대비 상승률로 살펴보고, 그 품종 주산지의 당월과 직전 3개월 기상 지표를 함께 봅니다.</p>
+    <h1>가격 추이 및 주산지 기상 분석</h1>
+    <p class="page-desc">품종별 월평균 가격을 3개월 이동평균과 전월·전년 동월 대비 변동률로 살펴보고, 주산지의 당월 및 직전 3개월 기상 지표를 함께 확인합니다.</p>
 
     <section>
         <h2>조회 조건</h2>

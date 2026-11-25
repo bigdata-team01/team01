@@ -84,11 +84,12 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
 <link rel="stylesheet" href="../assets/css/price-form.css">
 <div>
-    <h1>월별 가격 등록</h1>
-    <p>품종과 소비도시를 선택하고 해당 월의 소매가격을 입력하세요.</p>
+    <h1>가격 자료 등록</h1>
+    <p class="page-desc">품종과 소비도시를 선택하고 해당 월의 소비가격을 입력해 새로운 가격 자료를 등록합니다.</p>
     <?php if ($success): ?><p class="notice" role="status"><?= e((string)$success) ?></p><?php endif; ?>
     <?php if ($errors): ?><div class="errors" role="alert"><strong>입력 내용을 확인해주세요.</strong><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
     <?php if (!$ready && !$errors): ?><p class="notice">등록할 품종과 도시 목록이 아직 없습니다. 기준 데이터 등록 후 이용해주세요.</p><?php endif; ?>
+    <section>
     <form method="post" action="price_insert.php">
         <input type="hidden" name="csrf_token" value="<?= e($_SESSION['price_insert_csrf']) ?>">
         <fieldset <?= !$ready ? 'disabled' : '' ?>>
@@ -112,5 +113,6 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
             <button type="submit">가격 등록</button>
         </fieldset>
     </form>
+    </section>
 </div>
 <?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>

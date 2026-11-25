@@ -90,8 +90,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 <link rel="stylesheet" href="../assets/css/ranking.css">
 <div class="ranking-page">
 
-    <h1>소비지역별 월평균 가격 순위</h1>
-    <p>같은 월·과일·품종·거래단위·등급 안에서 소비지역의 평균가격 순위를 비교합니다.</p>
+    <h1>소비지역별 가격 순위 분석</h1>
+    <p class="page-desc">동일한 월·과일·품종·거래단위·등급 조건에서 소비지역별 평균가격 순위를 비교합니다.</p>
 
     <section>
         <h2>조회 조건</h2>

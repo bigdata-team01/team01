@@ -149,8 +149,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
 <link rel="stylesheet" href="../assets/css/grouping.css">
 <div class="grouping-page">
-    <h1>그룹핑 집계</h1>
-    <p>그룹핑 기준을 여러 개 선택하면 해당 조합별로 가격과 기상 집계를 보여줍니다.</p>
+    <h1>다중 기준 집계 분석</h1>
+    <p class="page-desc">연도·과일·지역 등 여러 기준을 조합하고, 이상기후 조건에 따른 가격 데이터를 집계합니다.</p>
 
     <section>
         <h2>그룹핑 기준 선택</h2>

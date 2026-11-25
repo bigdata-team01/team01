@@ -65,8 +65,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 <link rel="stylesheet" href="../assets/css/rollup.css">
 <div class="rollup-page">
 <main>
-    <h1>Rollup / Drill-down</h1>
-    <p>과일군 → 품목 → 품종 또는 연도 → 월 순서로 상세 가격을 살펴보세요.</p>
+    <h1>계층별 가격 분석</h1>
+    <p class="page-desc">과일군 → 품목 → 품종 또는 연도 → 월 순서로 집계 수준을 변경하며 상세 가격을 살펴봅니다.</p>
     <section>
         <h2>조회 조건</h2>
         <form method="get" action="rollup.php">

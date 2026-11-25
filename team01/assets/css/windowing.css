@@ -1,5 +1,5 @@
 /* 작성자: 박시원 — Windowing 분석 화면 전용 스타일. 폼·표 기본 모양은 ranking.css를 함께 사용합니다. */
-.windowing-page { max-width: 1280px; }
+.windowing-page { }
 .windowing-page .filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .windowing-page th, .windowing-page td { padding: 10px 7px; font-size: 0.94rem; }
 .windowing-page thead th { vertical-align: bottom; }
