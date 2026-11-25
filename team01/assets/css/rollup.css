@@ -1,0 +1,42 @@
+/* 작성자: 김예원 — 메인 및 채은님 CRUD 화면과 맞춘 Rollup 전용 스타일. */
+.rollup-page, .rollup-page * { box-sizing: border-box; }
+.rollup-page { margin: 0; background: #f5f7f4; color: #20352d; font: 15px/1.7 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.rollup-page main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+.rollup-page h1 { margin: 0 0 6px; font-size: 26px; }
+.rollup-page .eyebrow { margin-top: 0; }
+.rollup-page section { margin-top: 24px; padding: 24px; background: #fff; border: 1px solid #dce4da; border-radius: 14px; box-shadow: 0 6px 20px rgba(32, 53, 45, .06); }
+.rollup-page h2 { font-size: 18px; }
+.rollup-page a { color: #2f6b4f; text-underline-offset: 3px; }
+.rollup-topbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 32px; background: #fff; border-bottom: 1px solid #dce4da; }
+.rollup-topbar .brand { font-weight: 700; text-decoration: none; }
+.rollup-topbar nav { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 14px; }
+.rollup-page form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 14px 16px; }
+.rollup-page label { display: grid; min-width: 0; gap: 6px; font-size: 13px; font-weight: 600; color: #526258; }
+.rollup-page input, .rollup-page select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; border: 1px solid #a7b8ad; border-radius: 9px; background: #fafafa; color: #20352d; font: inherit; font-size: 14px; }
+.rollup-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.rollup-page button, .rollup-page .reset-button { display: inline-block; min-height: 44px; padding: 10px 18px; border: 1px solid transparent; border-radius: 9px; font: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.rollup-page button { background: #2f6b4f; color: #fff; }
+.rollup-page button:hover { background: #24533d; }
+.rollup-page .reset-button { background: #fff; border-color: #dce4da; color: #3d5a4a; }
+.rollup-page .reset-button:hover { background: #eef3ec; }
+.rollup-page :focus-visible { outline: 3px solid #9b6a18; outline-offset: 3px; }
+.rollup-page .note { color: #526258; font-size: 14px; }
+.rollup-page .table-scroll { overflow-x: auto; margin-top: 16px; }
+.rollup-page table { width: 100%; border-collapse: collapse; white-space: nowrap; font-size: 14px; }
+.rollup-page caption { text-align: left; padding: 8px 0; }
+.rollup-page th, .rollup-page td { padding: 11px 10px; border-bottom: 1px solid #e6ece4; text-align: right; font-variant-numeric: tabular-nums; }
+.rollup-page th:first-child { text-align: left; }
+.rollup-page thead, .rollup-page .summary { background: #eef3ec; color: #3d5a4a; }
+.rollup-page tbody tr:not(.summary):hover { background: #f8faf7; }
+.rollup-page [role="alert"], .rollup-page [role="status"] { padding: 14px 16px; border-radius: 9px; background: #eef3ec; }
+.rollup-page [role="alert"] { background: #fdecea; color: #b3261e; }
+@media (max-width: 760px) {
+    .rollup-page main { padding: 24px 16px 48px; }
+    .rollup-topbar { padding: 14px 16px; }
+    .rollup-page section { padding: 18px; }
+    .rollup-page form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 440px) {
+    .rollup-page form { grid-template-columns: 1fr; }
+    .rollup-actions > * { flex: 1; text-align: center; }
+}
