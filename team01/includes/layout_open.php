@@ -164,3 +164,4 @@ $analysisOpen = in_array($pageName, $analysisPages, true);
             <?php endforeach; ?>
         </nav>
 <?php endif; ?>
+        <div class="content-body">

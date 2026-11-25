@@ -259,7 +259,13 @@
   /* common.css의 main 중앙 고정 override */
   max-width: none;
   margin: 0;
-  padding: 16px 36px 48px;
+  padding: 16px 36px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-body {
+  flex: 1;
 }
 
 /* ── 브레드크럼 ── */
@@ -693,3 +699,73 @@
 }
 
 .content-area .table-scroll { overflow-x: auto; }
+
+/* ── 가격 자료 관리 섹션 ── */
+.data-section h2 {
+  margin: 0 0 4px;
+}
+.data-section-desc {
+  font-size: 0.85rem;
+  color: #55715f;
+  margin: 0 0 12px;
+}
+.data-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 0 10px;
+}
+.data-card {
+  background: #fff;
+  border: 1px solid #dce4da;
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: background 0.15s, border-color 0.15s;
+}
+.data-card:hover {
+  border-color: #285d42;
+  box-shadow: 0 2px 8px rgba(40, 93, 66, 0.1);
+}
+.data-card-title {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: #20352d;
+  margin: 0 0 3px;
+}
+.data-card-sub {
+  font-size: 0.775rem;
+  color: #55715f;
+  margin: 0;
+}
+.data-section-notice {
+  font-size: 0.8rem;
+  color: #7a9087;
+  margin: 0;
+}
+.data-section-notice a {
+  color: #285d42;
+  text-decoration: none;
+}
+.data-section-notice a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 600px) {
+  .data-cards { grid-template-columns: 1fr; }
+}
+
+/* ── 공통 푸터 ── */
+.site-footer {
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: 1px solid #dce4da;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 0.75rem;
+  color: #7a9087;
+}

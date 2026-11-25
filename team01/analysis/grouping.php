@@ -17,12 +17,12 @@ const ALLOWED_GROUPS = [
 
 const ALLOWED_CLIMATE = [
     'all'          => '전체 기간',
-    'heatwave'     => '폭염 발생 월',
+    'drought'      => '가뭄 발생 월',    
     'frost'        => '봄철 저온 발생 월',
-    'heavy_rain'   => '집중호우 발생 월',
-    'drought'      => '가뭄 발생 월',
     'rainy_season' => '이상 장마 발생 월',
-];
+    'heavy_rain'   => '집중 호우 발생 월',
+    'heatwave'     => '폭염 발생 월',
+    ];
 
 $climateRaw    = is_string($_GET['climate'] ?? null) ? trim($_GET['climate']) : 'all';
 $climateFilter = array_key_exists($climateRaw, ALLOWED_CLIMATE) ? $climateRaw : 'all';
@@ -217,7 +217,7 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                     <?php endforeach; ?>
                 </div>
             </fieldset>
-            <p class="agg-note climate-note">※ 이상기후 조건은 조회 후 즉시 전환할 수 있습니다. 해당 조건이 발생한 그룹 행이 강조 표시됩니다.</p>            
+            <p class="agg-note climate-note">※ 이상기후 조건은 조회 후 즉시 전환할 수 있습니다. 해당 조건이 발생한 그룹 행이 강조 표시됩니다. 월별 비교를 위해 그룹 기준에서 '월'을 함께 선택하는 것을 권장합니다.</p>            
         </form>
     </section>
 
@@ -285,11 +285,11 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 <script>
 (function () {
     var attrMap = {
-        heatwave:     'data-heatwave',
         frost:        'data-frost',
-        heavy_rain:   'data-heavy-rain',
-        drought:      'data-drought',
+        drought:      'data-drought',        
         rainy_season: 'data-rainy-season',
+        heavy_rain:   'data-heavy-rain',
+        heatwave:     'data-heatwave',
     };
     var labels = <?= json_encode(ALLOWED_CLIMATE, JSON_UNESCAPED_UNICODE) ?>;
     var statusEl = document.getElementById('climate-status');
@@ -309,7 +309,7 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
         if (statusEl) {
             statusEl.textContent = value === 'all'
                 ? ''
-                : ' · 이상기후 조건: ' + labels[value] + ' — ' + count + '개 그룹 강조';
+                : ' · 이상기후 조건: ' + labels[value] + ' — ' + count + '개 그룹';
         }
     }
 

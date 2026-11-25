@@ -176,18 +176,28 @@ require_once __DIR__ . '/includes/layout_open.php';
     </a>
 </div>
 
-<section>
+<section class="data-section">
     <h2>가격 자료 관리</h2>
+    <p class="data-section-desc">월별 과일 가격 데이터를 조회하고 관리하세요.</p>
+    <div class="data-cards">
+        <a href="crud/list.php" class="data-card">
+            <p class="data-card-title">자료 검색</p>
+            <p class="data-card-sub">Browse Records</p>
+        </a>
+        <a href="crud/price_insert.php" class="data-card">
+            <p class="data-card-title">가격 등록</p>
+            <p class="data-card-sub">Add New Price</p>
+        </a>
+        <a href="crud/price_edit_list.php" class="data-card">
+            <p class="data-card-title">가격 수정</p>
+            <p class="data-card-sub">Edit Prices</p>
+        </a>
+    </div>
     <?php if (isset($_SESSION['user_id'])): ?>
-        <p><?= e((string)($_SESSION['login_id'] ?? '회원')) ?>님 로그인 중 · <a href="auth/logout.php">로그아웃</a></p>
+        <p class="data-section-notice"><?= e((string)($_SESSION['login_id'] ?? '회원')) ?>님 로그인 중 · <a href="auth/logout.php">로그아웃</a></p>
     <?php else: ?>
-        <p>가격 등록·수정은 로그인 후 이용할 수 있습니다. <a href="auth/login.php">로그인</a> · <a href="auth/register.php">회원가입</a></p>
+        <p class="data-section-notice">가격 데이터 등록 및 수정은 로그인 후 이용할 수 있습니다. <a href="auth/login.php">로그인</a> · <a href="auth/register.php">회원가입</a></p>
     <?php endif; ?>
-    <ul>
-        <li><a href="crud/list.php">가격 자료 검색·상세·삭제</a></li>
-        <li><a href="crud/price_insert.php">새 가격 등록</a></li>
-        <li><a href="crud/price_edit_list.php">기존 가격 수정</a></li>
-    </ul>
 </section>
 
 <?php require_once __DIR__ . '/includes/layout_close.php'; ?>
