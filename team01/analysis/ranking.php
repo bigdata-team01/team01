@@ -77,20 +77,19 @@ try {
 }
 
 $rankLabel = $order === 'low' ? '낮은 가격 순' : '높은 가격 순';
+$pageTitle  = '소비지역 가격 Ranking · Team01';
+$pageName   = 'ranking';
+$breadcrumb = [
+    ['label' => 'Overview',  'url' => '../index.php'],
+    ['label' => 'Analysis'],
+    ['label' => 'Ranking'],
+];
+$depth = 1;
+require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>소비지역 가격 Ranking · Team01</title>
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/ranking.css">
-</head>
-<body>
-<main class="ranking-page">
-    <p class="eyebrow">고급 분석 · Ranking</p>
-    <a href="../index.php">← 메인으로</a>
+<link rel="stylesheet" href="../assets/css/ranking.css">
+<div class="ranking-page">
+
     <h1>소비지역별 월평균 가격 순위</h1>
     <p>같은 월·과일·품종·거래단위·등급 안에서 소비지역의 평균가격 순위를 비교합니다.</p>
 
@@ -168,6 +167,5 @@ $rankLabel = $order === 'low' ? '낮은 가격 순' : '높은 가격 순';
             </div>
         <?php endif; ?>
     </section>
-</main>
-</body>
-</html>
+</div>
+<?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>

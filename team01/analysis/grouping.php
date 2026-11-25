@@ -137,20 +137,18 @@ if ($submitted) {
         $error = true;
     }
 }
+$pageTitle  = '다중 그룹핑 집계 · Team01';
+$pageName   = 'grouping';
+$breadcrumb = [
+    ['label' => 'Overview',  'url' => '../index.php'],
+    ['label' => 'Analysis'],
+    ['label' => 'Grouping'],
+];
+$depth = 1;
+require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>다중 그룹핑 집계 · Team01</title>
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/grouping.css">
-</head>
-<body>
-<main class="grouping-page">
-    <p class="eyebrow">그룹핑</p>
-    <a href="../index.php">← 메인으로</a>
+<link rel="stylesheet" href="../assets/css/grouping.css">
+<div class="grouping-page">
     <h1>그룹핑 집계</h1>
     <p>그룹핑 기준을 여러 개 선택하면 해당 조합별로 가격과 기상 집계를 보여줍니다.</p>
 
@@ -323,6 +321,5 @@ if ($submitted) {
     if (checked) applyHighlight(checked.value);
 }());
 </script>
-</main>
-</body>
-</html>
+</div>
+<?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>

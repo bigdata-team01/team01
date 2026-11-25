@@ -151,7 +151,7 @@ $currentUrl = list_url($filters, $sort, $page);
 $loggedIn = is_logged_in();
 $flash = take_flash();
 
-crud_page_start('가격 자료 검색');
+crud_page_start('Browse Records');
 ?>
         <h1>가격 자료 검색</h1>
         <p class="subtitle">품목·품종·도시·등급·기간으로 월별 소매가격을 찾아보세요.</p>

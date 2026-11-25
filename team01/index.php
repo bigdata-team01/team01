@@ -72,7 +72,6 @@ try {
 $pageTitle  = '이상기후와 과일 가격 · Team01';
 $pageName   = 'overview';
 $breadcrumb = [
-    ['label' => 'Home',     'url' => 'index.php'],
     ['label' => 'Overview'],
 ];
 $depth = 0;
@@ -171,10 +170,10 @@ require_once __DIR__ . '/includes/layout_open.php';
         <p class="feature-card-title">가격 순위 분석</p>
         <p class="feature-card-sub">Ranking · 소비지역별 월평균 가격 순위</p>
     </a>
-    <span class="feature-card disabled">
+    <a href="analysis/windowing.php" class="feature-card">
         <p class="feature-card-title">기간별 추이</p>
         <p class="feature-card-sub">Windowing · 전년 동월 대비 가격 변동률</p>
-    </span>
+    </a>
 </div>
 
 <section>
@@ -185,20 +184,9 @@ require_once __DIR__ . '/includes/layout_open.php';
         <p>가격 등록·수정은 로그인 후 이용할 수 있습니다. <a href="auth/login.php">로그인</a> · <a href="auth/register.php">회원가입</a></p>
     <?php endif; ?>
     <ul>
-        <li><a href="crud/list.php">가격 자료 검색·상세·삭제</a></li><!-- 유채은 -->
+        <li><a href="crud/list.php">가격 자료 검색·상세·삭제</a></li>
         <li><a href="crud/price_insert.php">새 가격 등록</a></li>
         <li><a href="crud/price_edit_list.php">기존 가격 수정</a></li>
-    </ul>
-</section>
-<section>
-    <h2>개발 준비</h2>
-    <p>공통 PHP 실행 환경이 준비되었습니다. 분석 기능과 데이터는 아직 준비 중입니다.</p>
-    <ul>
-        <li><a href="analysis/grouping.php">다중 그룹핑 집계</a></li>
-        <li><a href="analysis/rollup.php">Rollup / Drill down · 과일·시간 계층별 가격 집계</a></li>
-        <li><a href="analysis/ranking.php">Ranking · 소비지역별 월평균 가격 순위</a></li>
-        <li><a href="analysis/windowing.php">Windowing · 가격 흐름과 주산지 이상기후</a></li>
-        <li>데이터 조회·등록·수정·삭제 및 로그인</li>
     </ul>
 </section>
 

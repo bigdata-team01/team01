@@ -55,7 +55,7 @@ function weather_value($value, string $suffix): string
     return e($text . $suffix);
 }
 
-crud_page_start('가격 자료 상세');
+crud_page_start('Price Detail');
 ?>
         <p><a href="<?= e($backUrl) ?>">← 검색 결과로</a></p>
 

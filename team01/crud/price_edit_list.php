@@ -19,15 +19,18 @@ try {
     error_log('price_edit_list failed: '.$e->getMessage());
     $error = true;
 }
+$pageTitle  = '수정할 가격 선택 · Team01';
+$pageName   = 'data-edit';
+$breadcrumb = [
+    ['label' => 'Overview',         'url' => '../index.php'],
+    ['label' => 'Data Management'],
+    ['label' => 'Edit Prices'],
+];
+$depth = 1;
+require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
-<!doctype html>
-<html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>수정할 가격 선택 · Team01</title>
-<link rel="stylesheet" href="../assets/css/common.css"><link rel="stylesheet" href="../assets/css/price-form.css"></head>
-<body><main>
-    <p class="hint"><?= e((string)($_SESSION['login_id'] ?? '회원')) ?>님 로그인 중 · <a href="../auth/logout.php">로그아웃</a></p>
-<a href="../index.php">← 메인으로</a> · <a href="price_insert.php">새 가격 등록</a>
+<link rel="stylesheet" href="../assets/css/price-form.css">
+<div>
 <h1>수정할 가격 선택</h1>
 <p>최근 월부터 표시됩니다. 수정할 자료의 ‘수정’을 눌러주세요.</p>
 <?php if ($error): ?><p class="errors" role="alert">목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>
@@ -45,4 +48,5 @@ try {
 <?php if ($page < $pages): ?><a href="?page=<?= $page+1 ?>">다음 →</a><?php endif; ?>
 </nav>
 <?php endif; ?>
-</main></body></html>
+</div>
+<?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>
