@@ -14,12 +14,12 @@ function rollupInput(array $input): array
     }
     $state['axis'] = $state['axis'] === '' ? 'fruit' : $state['axis'];
     if (!in_array($state['axis'], ['fruit', 'time'], true)
-        || ($state['year'] !== '' && !isDataMonth($state['year'] . '-01'))) {
+        || ($state['year'] !== '' && !preg_match('/^[1-9][0-9]{3}$/D', $state['year']))) {
         throw new InvalidArgumentException('분석 기준 또는 연도가 올바르지 않습니다.');
     }
     foreach (['start', 'end'] as $key) {
-        if ($state[$key] !== '' && !isDataMonth($state[$key])) {
-            throw new InvalidArgumentException('기간은 2015-01부터 2025-12 사이로 입력하세요.');
+        if ($state[$key] !== '' && !preg_match('/^[1-9][0-9]{3}-(0[1-9]|1[0-2])$/D', $state[$key])) {
+            throw new InvalidArgumentException('기간은 YYYY-MM 형식으로 입력하세요.');
         }
     }
     if ($state['start'] !== '' && $state['end'] !== '' && $state['start'] > $state['end']) {

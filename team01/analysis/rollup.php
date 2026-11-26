@@ -76,8 +76,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                     <option value="time" <?= $state['axis'] === 'time' ? 'selected' : '' ?>>시간 계층</option>
                 </select>
             </label>
-            <label>시작 월 <input type="month" name="start" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($state['start']) ?>"></label>
-            <label>종료 월 <input type="month" name="end" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($state['end']) ?>"></label>
+            <label>시작 월 <input type="month" name="start" value="<?= e($state['start']) ?>"></label>
+            <label>종료 월 <input type="month" name="end" value="<?= e($state['end']) ?>"></label>
             <?php foreach (['unit' => '거래 단위', 'grade' => '등급', 'market' => '소비 도시'] as $key => $label): ?>
                 <label><?= e($label) ?>
                     <select name="<?= e($key) ?>" <?= $key !== 'market' ? 'required' : '' ?>>

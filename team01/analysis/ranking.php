@@ -6,12 +6,16 @@ require_once dirname(__DIR__) . '/includes/bootstrap.php';
 header('Content-Type: text/html; charset=UTF-8');
 
 $grades = ['상품', '중품', 'S과', 'M과', 'L과'];
+$minMonth = '2015-01';
+$maxMonth = '2025-12';
 $monthInput = is_string($_GET['ym'] ?? null) ? trim($_GET['ym']) : '';
 $fruitInput = is_string($_GET['fruit'] ?? null) ? trim($_GET['fruit']) : '';
 $gradeInput = is_string($_GET['grade'] ?? null) ? trim($_GET['grade']) : '';
 $orderInput = is_string($_GET['order'] ?? null) ? $_GET['order'] : 'high';
 
-$month = isDataMonth($monthInput)
+$month = preg_match('/^[0-9]{4}-(?:0[1-9]|1[0-2])$/D', $monthInput)
+    && $monthInput >= $minMonth
+    && $monthInput <= $maxMonth
     ? $monthInput
     : '';
 $grade = in_array($gradeInput, $grades, true) ? $gradeInput : '';
@@ -98,7 +102,7 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
         <form method="get" class="filter-grid">
             <div class="field">
                 <label for="ym">기준 월</label>
-                <input id="ym" name="ym" type="month" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($month) ?>">
+                <input id="ym" name="ym" type="month" min="<?= e($minMonth) ?>" max="<?= e($maxMonth) ?>" value="<?= e($month) ?>">
             </div>
             <div class="field">
                 <label for="fruit">과일</label>

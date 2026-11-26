@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = '소비도시를 선택해주세요.';
     }
     if (!in_array($values['grade'], $grades, true)) { $errors[] = '등급을 선택해주세요.'; }
-    if (!isDataMonth($values['ym'])) {
-        $errors[] = '기준 월은 2015-01부터 2025-12 사이로 입력해주세요.';
+    if (!preg_match('/^(?:[1-9][0-9]{3})-(?:0[1-9]|1[0-2])$/D', $values['ym'])) {
+        $errors[] = '기준 월을 올바르게 입력해주세요.';
     }
     $prices = [];
     foreach (['avg_price'=>'평균 가격','min_price'=>'최저 가격','max_price'=>'최고 가격'] as $key=>$label) {
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </select>
                 </div>
                 <div class="field"><label for="market_id">소비도시</label><select id="market_id" name="market_id" required><option value="">도시 선택</option><?php foreach ($markets as $m): ?><option value="<?= e((string)$m['market_id']) ?>" <?= $values['market_id']===(string)$m['market_id']?'selected':'' ?>><?= e($m['market_name']) ?></option><?php endforeach; ?></select></div>
-                <div class="field"><label for="ym">기준 월</label><input id="ym" name="ym" type="month" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($values['ym']) ?>" required></div>
+                <div class="field"><label for="ym">기준 월</label><input id="ym" name="ym" type="month" min="1000-01" max="9999-12" value="<?= e($values['ym']) ?>" required></div>
                 <div class="field"><label for="grade">등급</label><select id="grade" name="grade" required><option value="">등급 선택</option><?php foreach ($grades as $grade): ?><option <?= $values['grade']===$grade?'selected':'' ?> value="<?= e($grade) ?>"><?= e($grade) ?></option><?php endforeach; ?></select></div>
             </div>
             <p class="hint" id="price-help">가격은 선택한 거래 단위 기준의 원 단위 정수로 입력하세요. 최저·최고는 그달 일평균 가격의 최저·최고입니다.</p>
