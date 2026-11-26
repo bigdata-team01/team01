@@ -7,6 +7,8 @@ require_once dirname(__DIR__) . '/includes/bootstrap.php';
 header('Content-Type: text/html; charset=UTF-8');
 
 const WINDOWING_GRADES = ['상품', '중품', 'S과', 'M과', 'L과'];
+// KAMIS 등급 표기는 품목에 따라 도중에 상품/중품에서 크기 등급(S과/M과/L과)으로 바뀝니다.
+const WINDOWING_OLD_GRADES = ['상품', '중품'];
 const WINDOWING_DROUGHT_LABELS = [0 => '없음', 1 => '약함', 2 => '보통', 3 => '심함'];
 const WINDOWING_MAX_ROWS = 1000;
 
@@ -29,6 +31,12 @@ function rateCell(?float $rate): string
     return '<td class="number ' . $class . '">' . $sign . e(number_format(abs($rate), 1)) . '%</td>';
 }
 
+/** 'YYYY-MM-DD' 형태의 월 값을 'YYYY.MM'으로 줄여 보여줍니다. */
+function monthLabel(string $ym): string
+{
+    return str_replace('-', '.', substr($ym, 0, 7));
+}
+
 function numberCell(mixed $value, int $decimals = 0, string $suffix = '', string $class = ''): string
 {
     if ($value === null) {
@@ -49,18 +57,19 @@ function droughtCell(mixed $level): string
 
 $varietyInput = is_string($_GET['variety'] ?? null) ? $_GET['variety'] : '';
 $marketInput = is_string($_GET['market'] ?? null) ? trim($_GET['market']) : '서울';
-$gradeInput = is_string($_GET['grade'] ?? null) ? trim($_GET['grade']) : '상품';
+$gradeInput = is_string($_GET['grade'] ?? null) ? trim($_GET['grade']) : '';
 $fromYearInput = is_string($_GET['from'] ?? null) ? $_GET['from'] : '';
 $orderInput = is_string($_GET['order'] ?? null) ? $_GET['order'] : 'new';
 
-$grade = in_array($gradeInput, WINDOWING_GRADES, true) ? $gradeInput : '상품';
 $order = in_array($orderInput, ['new', 'old'], true) ? $orderInput : 'new';
 $sortDirection = $order === 'old' ? 'ASC' : 'DESC';
 
 $varieties = [];
 $markets = [];
 $years = [];
-$availableGrades = [];
+$gradeRanges = [];
+$grade = '';
+$gradeChanged = false;
 $variety = null;
 $market = '';
 $fromYear = null;
@@ -99,13 +108,39 @@ try {
 
     if ($variety !== null) {
         $seriesParams = [$variety['fruit_name'], $variety['variety_name'], $variety['unit']];
+        // 등급마다 자료가 있는 기간이 달라서, 이 품종에 실제로 있는 등급과 기간을 먼저 읽습니다.
         $statement = $pdo->prepare(
-            'SELECT DISTINCT grade FROM v_price_weather
-             WHERE fruit_name = ? AND variety_name = ? AND unit = ?'
+            'SELECT grade, MIN(ym) AS first_ym, MAX(ym) AS last_ym, COUNT(*) AS row_count
+             FROM v_price_weather
+             WHERE fruit_name = ? AND variety_name = ? AND unit = ?
+             GROUP BY grade'
         );
         $statement->execute($seriesParams);
-        $found = $statement->fetchAll(PDO::FETCH_COLUMN);
-        $availableGrades = array_values(array_intersect(WINDOWING_GRADES, $found));
+        $found = [];
+        foreach ($statement->fetchAll() as $range) {
+            $found[(string) $range['grade']] = $range;
+        }
+        foreach (WINDOWING_GRADES as $gradeOption) {
+            if (isset($found[$gradeOption])) {
+                $gradeRanges[$gradeOption] = $found[$gradeOption];
+            }
+        }
+
+        // 등급을 고르지 않았거나 이 품종에 없는 등급이면, 가장 최근까지 자료가 있는 등급
+        // (같으면 자료가 더 많은 등급)을 기본으로 씁니다.
+        if (isset($gradeRanges[$gradeInput])) {
+            $grade = $gradeInput;
+        } else {
+            foreach ($gradeRanges as $gradeOption => $range) {
+                $best = $grade === '' ? null : $gradeRanges[$grade];
+                if ($best === null
+                    || [(string) $range['last_ym'], (int) $range['row_count']] > [(string) $best['last_ym'], (int) $best['row_count']]) {
+                    $grade = $gradeOption;
+                }
+            }
+        }
+        $oldGrades = array_intersect(array_keys($gradeRanges), WINDOWING_OLD_GRADES);
+        $gradeChanged = $oldGrades && count($oldGrades) < count($gradeRanges);
 
         $conditions = ['fruit_name = ?', 'variety_name = ?', 'unit = ?', 'grade = ?'];
         $params = array_merge($seriesParams, [$grade]);
@@ -211,8 +246,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
             <div class="field">
                 <label for="grade">등급</label>
                 <select id="grade" name="grade">
-                    <?php foreach (WINDOWING_GRADES as $gradeOption): ?>
-                        <option value="<?= e($gradeOption) ?>" <?= $grade === $gradeOption ? 'selected' : '' ?>><?= e($gradeOption) ?></option>
+                    <?php foreach ($gradeRanges as $gradeOption => $range): ?>
+                        <option value="<?= e($gradeOption) ?>" <?= $grade === $gradeOption ? 'selected' : '' ?>><?= e($gradeOption) ?> (<?= e(monthLabel((string)$range['first_ym'])) ?> ~ <?= e(monthLabel((string)$range['last_ym'])) ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -243,6 +278,13 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
             </div>
             <button type="submit">가격 흐름 조회</button>
         </form>
+        <script>
+            // 품종마다 등급 목록이 달라서, 품종을 바꾸면 등급을 비우고 바로 다시 조회합니다.
+            document.getElementById('variety').addEventListener('change', function () {
+                document.getElementById('grade').disabled = true;
+                this.form.submit();
+            });
+        </script>
     </section>
 
     <section>
@@ -260,13 +302,16 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                 (<?= e($variety['station_type']) ?> <?= e((string)$variety['station_id']) ?>)
                 · <?= e((string)count($rows)) ?>행
             </p>
-            <?php if (!$rows): ?>
-                <p class="notice">
-                    조건에 맞는 가격 자료가 없습니다.
-                    <?php if ($availableGrades && !in_array($grade, $availableGrades, true)): ?>
-                        이 품종에 있는 등급: <?= e(implode(', ', $availableGrades)) ?>.
-                    <?php endif; ?>
+            <?php if ($gradeChanged): ?>
+                <p class="notice grade-note">
+                    이 품종은 조사 도중 등급 표기가 상품·중품에서 크기 등급(S과·M과·L과)으로 바뀌어, 등급마다 자료가 있는 기간이 다릅니다.
+                    <?php foreach ($gradeRanges as $gradeOption => $range): ?>
+                        <span class="grade-range"><?= $grade === $gradeOption ? '<strong>' : '' ?><?= e($gradeOption) ?> <?= e(monthLabel((string)$range['first_ym'])) ?>~<?= e(monthLabel((string)$range['last_ym'])) ?><?= $grade === $gradeOption ? '</strong>' : '' ?></span>
+                    <?php endforeach; ?>
                 </p>
+            <?php endif; ?>
+            <?php if (!$rows): ?>
+                <p class="notice">조건에 맞는 가격 자료가 없습니다.</p>
             <?php else: ?>
                 <div class="table-scroll" tabindex="0" role="region" aria-label="가격 흐름과 주산지 기상 지표">
                     <table>
