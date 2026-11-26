@@ -4,40 +4,18 @@
 
 function crud_page_start(string $title): void
 {
-    $loginId = $_SESSION['login_id'] ?? null;
+    $pageTitle  = $title . ' · 이상기후와 과일 가격';
+    $pageName   = 'data-browse';
+    $breadcrumb = [
+        ['label' => 'Overview',         'url' => '../index.php'],
+        ['label' => 'Data Management'],
+        ['label' => $title],
+    ];
+    $depth = 1;
+    require_once dirname(__DIR__) . '/includes/layout_open.php';
     ?>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($title) ?> · 이상기후와 과일 가격</title>
     <style>
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            background: #f5f7f4;
-            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
-            color: #20352d;
-            font-size: 15px;
-        }
-
-        a { color: #2f6b4f; }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 32px;
-            background: #ffffff;
-            border-bottom: 1px solid #dce4da;
-        }
-        .topbar .brand { font-weight: 700; color: #2f6b4f; text-decoration: none; }
-        .topbar .user { font-size: 14px; color: #666666; }
-        .topbar .user a { margin-left: 10px; font-weight: 600; text-decoration: none; }
-
-        .container { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+        .container { padding: 0 0 48px; }
 
         h1 { margin: 0 0 6px; font-size: 26px; }
         .subtitle { margin: 0 0 24px; color: #777777; font-size: 14px; }
@@ -166,31 +144,16 @@ function crud_page_start(string $title): void
             .table-wrap { overflow-x: auto; }
         }
     </style>
-</head>
-<body>
-    <header class="topbar">
-        <a class="brand" href="../index.php">이상기후와 과일 가격</a>
-        <div class="user">
-            <?php if ($loginId !== null): ?>
-                <strong><?= e($loginId) ?></strong>님
-                <a href="../auth/logout.php">로그아웃</a>
-            <?php else: ?>
-                로그인하면 삭제할 수 있어요
-                <a href="../auth/login.php">로그인</a>
-            <?php endif; ?>
-        </div>
-    </header>
-    <main class="container">
+    <div class="container">
 <?php
 }
 
 function crud_page_end(): void
 {
     ?>
-    </main>
-</body>
-</html>
-<?php
+    </div>
+    <?php
+    require_once dirname(__DIR__) . '/includes/layout_close.php';
 }
 
 // 돌아갈 주소는 검색 목록(list.php)만 허용합니다. (외부 주소로 보내는 것 방지)

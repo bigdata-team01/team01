@@ -180,23 +180,22 @@ try {
     error_log('windowing analysis failed: ' . $exception->getMessage());
     $error = true;
 }
+$pageTitle  = '가격 흐름 Windowing · Team01';
+$pageName   = 'windowing';
+$breadcrumb = [
+    ['label' => 'Overview',  'url' => '../index.php'],
+    ['label' => 'Analysis'],
+    ['label' => 'Windowing'],
+];
+$depth = 1;
+require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>가격 흐름 Windowing · Team01</title>
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/ranking.css">
-    <link rel="stylesheet" href="../assets/css/windowing.css">
-</head>
-<body>
-<main class="windowing-page">
-    <p class="eyebrow">고급 분석 · Windowing</p>
-    <a href="../index.php">← 메인으로</a>
-    <h1>가격 흐름과 주산지 이상기후</h1>
-    <p>한 품종의 월평균 가격을 3개월 이동평균, 전월·전년 동월 대비 상승률로 살펴보고, 그 품종 주산지의 당월과 직전 3개월 기상 지표를 함께 봅니다.</p>
+<link rel="stylesheet" href="../assets/css/ranking.css">
+<link rel="stylesheet" href="../assets/css/windowing.css">
+<div class="windowing-page">
+
+    <h1>가격 추이 및 주산지 기상 분석</h1>
+    <p class="page-desc">품종별 월평균 가격을 3개월 이동평균과 전월·전년 동월 대비 변동률로 살펴보고, 주산지의 당월 및 직전 3개월 기상 지표를 함께 확인합니다.</p>
 
     <section>
         <h2>조회 조건</h2>
@@ -342,6 +341,5 @@ try {
             <li>가격과 기상 지표를 나란히 보여줄 뿐이며, 날씨가 가격 변동의 원인임을 뜻하지는 않습니다.</li>
         </ul>
     </section>
-</main>
-</body>
-</html>
+</div>
+<?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>

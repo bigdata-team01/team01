@@ -52,36 +52,21 @@ if ($state['axis'] === 'time') {
     $level = $state['year'] === '' ? '연도' : '월';
 }
 $hasData = array_sum(array_column($rows, 'row_count')) > 0;
+$pageTitle  = 'Rollup / Drill-down · Team01';
+$pageName   = 'rollup';
+$breadcrumb = [
+    ['label' => 'Overview',  'url' => '../index.php'],
+    ['label' => 'Analysis'],
+    ['label' => 'Rollup / Drilldown'],
+];
+$depth = 1;
+require_once dirname(__DIR__) . '/includes/layout_open.php';
 ?>
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rollup / Drill-down · Team01</title>
-    <link rel="stylesheet" href="../assets/css/common.css">
-    <link rel="stylesheet" href="../assets/css/rollup.css">
-</head>
-<body class="rollup-page">
-<header class="rollup-topbar">
-    <a class="brand" href="../index.php">이상기후와 과일 가격</a>
-    <nav aria-label="서비스 메뉴">
-        <a href="ranking.php">Ranking</a>
-        <?php if (is_file(dirname(__DIR__) . '/crud/list.php')): ?>
-            <a href="../crud/list.php">가격 자료 검색</a>
-        <?php endif; ?>
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <span><?= e((string) ($_SESSION['login_id'] ?? '사용자')) ?>님</span>
-            <a href="../auth/logout.php">로그아웃</a>
-        <?php else: ?>
-            <a href="../auth/login.php">로그인</a>
-        <?php endif; ?>
-    </nav>
-</header>
+<link rel="stylesheet" href="../assets/css/rollup.css">
+<div class="rollup-page">
 <main>
-    <p class="eyebrow">과일 가격 · 계층별 분석</p>
-    <h1>Rollup / Drill-down</h1>
-    <p>과일군 → 품목 → 품종 또는 연도 → 월 순서로 상세 가격을 살펴보세요.</p>
+    <h1>계층별 가격 분석</h1>
+    <p class="page-desc">과일군 → 품목 → 품종 또는 연도 → 월 순서로 집계 수준을 변경하며 상세 가격을 살펴봅니다.</p>
     <section>
         <h2>조회 조건</h2>
         <form method="get" action="rollup.php">
@@ -167,6 +152,5 @@ $hasData = array_sum(array_column($rows, 'row_count')) > 0;
             <p class="note">전체 집계는 원본 행에서 다시 계산합니다. 표본 수는 월평균 가격이 있는 행 수이며, 결측 가격은 평균에서 제외됩니다. 최저·최고는 월내 일평균 가격의 최저·최고입니다. 품종과 월이 각 계층의 마지막 단계입니다.</p>
         <?php endif; ?>
     </section>
-</main>
-</body>
-</html>
+</div>
+<?php require_once dirname(__DIR__) . '/includes/layout_close.php'; ?>
