@@ -11,7 +11,7 @@ $fruitInput = is_string($_GET['fruit'] ?? null) ? trim($_GET['fruit']) : '';
 $gradeInput = is_string($_GET['grade'] ?? null) ? trim($_GET['grade']) : '';
 $orderInput = is_string($_GET['order'] ?? null) ? $_GET['order'] : 'high';
 
-$month = preg_match('/^(?:[1-9][0-9]{3})-(?:0[1-9]|1[0-2])$/D', $monthInput)
+$month = isDataMonth($monthInput)
     ? $monthInput
     : '';
 $grade = in_array($gradeInput, $grades, true) ? $gradeInput : '';
@@ -98,7 +98,7 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
         <form method="get" class="filter-grid">
             <div class="field">
                 <label for="ym">기준 월</label>
-                <input id="ym" name="ym" type="month" min="1000-01" max="9999-12" value="<?= e($month) ?>">
+                <input id="ym" name="ym" type="month" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($month) ?>">
             </div>
             <div class="field">
                 <label for="fruit">과일</label>

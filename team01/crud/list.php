@@ -27,7 +27,7 @@ function month_param(string $name): ?string
 {
     $value = $_GET[$name] ?? '';
 
-    return (is_string($value) && preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $value)) ? $value : null;
+    return (is_string($value) && isDataMonth($value)) ? $value : null;
 }
 
 $filters = [
@@ -214,11 +214,11 @@ crud_page_start('Browse Records');
                 </div>
                 <div class="field">
                     <label for="from">시작 월</label>
-                    <input type="month" id="from" name="from" value="<?= e($filters['from'] ?? '') ?>">
+                    <input type="month" id="from" name="from" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($filters['from'] ?? '') ?>">
                 </div>
                 <div class="field">
                     <label for="to">끝 월</label>
-                    <input type="month" id="to" name="to" value="<?= e($filters['to'] ?? '') ?>">
+                    <input type="month" id="to" name="to" min="<?= e(DATA_MIN_MONTH) ?>" max="<?= e(DATA_MAX_MONTH) ?>" value="<?= e($filters['to'] ?? '') ?>">
                 </div>
                 <div class="field">
                     <label for="min_price">평균가 (원)</label>
