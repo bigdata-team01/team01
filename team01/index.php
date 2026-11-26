@@ -115,6 +115,8 @@ require_once __DIR__ . '/includes/layout_open.php';
         <canvas id="priceChart"></canvas>
     </div>
 </div>
+<p class="chart-note"> ※ 데이터 정제 기준에 따라 감귤은 2018년부터, 샤인머스켓은 2019년부터 분석 자료에 포함되므로 가격 추이 확인 시 참고하시기 바랍니다.</p>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 (function () {
