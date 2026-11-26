@@ -349,11 +349,11 @@
   border: 1px solid #dce4da;
   border-radius: 12px;
   padding: 24px;
-  margin: 0 0 16px;
+  margin: 16px 0 0;
 }
 
 .chart-section h2 {
-  margin: 0 0 16px;
+  margin: 16px 0 0;
   font-size: 1rem;
   color: #20352d;
 }
@@ -361,6 +361,12 @@
 .chart-wrap {
   position: relative;
   height: 260px;
+}
+
+.chart-note {
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  color: #9aada0;
 }
 
 /* ── 기능 바로가기 카드 ── */
@@ -626,7 +632,9 @@
   text-decoration: none;
   transition: background 0.15s;
 }
-.btn-primary:hover { background: #1e4932; }
+.btn-primary:hover {
+  background: #1e4932;
+}
 
 .btn-secondary {
   display: inline-flex;
@@ -644,7 +652,9 @@
   text-decoration: none;
   transition: background 0.15s;
 }
-.btn-secondary:hover { background: #eef3ec; }
+.btn-secondary:hover {
+  background: #eef3ec;
+}
 
 .btn-edit {
   display: inline-flex;
@@ -659,9 +669,14 @@
   font-size: 0.8125rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
-.btn-edit:hover { background: #eef3ec; border-color: #285d42; }
+.btn-edit:hover {
+  background: #eef3ec;
+  border-color: #285d42;
+}
 
 /* 공통 테이블 */
 .content-area table {
@@ -691,14 +706,18 @@
   white-space: nowrap;
 }
 
-.content-area tbody tr:hover { background: #f8faf7; }
+.content-area tbody tr:hover {
+  background: #f8faf7;
+}
 
 .content-area .number {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.content-area .table-scroll { overflow-x: auto; }
+.content-area .table-scroll {
+  overflow-x: auto;
+}
 
 /* ── 가격 자료 관리 섹션 ── */
 .data-section h2 {
@@ -723,7 +742,9 @@
   text-decoration: none;
   color: inherit;
   display: block;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 .data-card:hover {
   border-color: #285d42;
@@ -753,7 +774,9 @@
   text-decoration: underline;
 }
 @media (max-width: 600px) {
-  .data-cards { grid-template-columns: 1fr; }
+  .data-cards {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── 공통 푸터 ── */
