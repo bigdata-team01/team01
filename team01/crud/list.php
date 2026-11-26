@@ -24,20 +24,28 @@ function int_param(string $name): ?int
     return (is_string($value) && ctype_digit($value)) ? (int) $value : null;
 }
 
-function month_param(string $name): ?string
+function month_param(string $name, string &$inputError): ?string
 {
     $value = $_GET[$name] ?? '';
+    if ($value === '') {
+        return null;
+    }
+    if (!is_string($value) || !preg_match('/^\d{4}-(0[1-9]|1[0-2])$/D', $value)) {
+        $inputError = '기간은 YYYY-MM 형식으로 입력하세요.';
+        return null;
+    }
 
-    return (is_string($value) && preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $value)) ? $value : null;
+    return $value;
 }
 
+$inputError = '';
 $filters = [
     'fruit_id'   => int_param('fruit_id'),
     'variety_id' => int_param('variety_id'),
     'market_id'  => int_param('market_id'),
     'grade'      => in_array($_GET['grade'] ?? '', GRADES, true) ? $_GET['grade'] : null,
-    'from'       => month_param('from'),
-    'to'         => month_param('to'),
+    'from'       => month_param('from', $inputError),
+    'to'         => month_param('to', $inputError),
     'min_price'  => int_param('min_price'),
     'max_price'  => int_param('max_price'),
 ];
@@ -117,6 +125,9 @@ try {
         'SELECT variety_id, fruit_id, variety_name FROM FRUIT_VARIETY ORDER BY fruit_id, variety_id'
     )->fetchAll();
     $markets = $connection->query('SELECT market_id, market_name FROM MARKET_REGION ORDER BY market_id')->fetchAll();
+    if ($inputError !== '') {
+        throw new InvalidArgumentException($inputError);
+    }
     $monthRange = priceMonthRange($connection, $rangeFilters);
     foreach (['from', 'to'] as $key) {
         if ($filters[$key] !== null && !monthInPriceRange($filters[$key], $monthRange)) {
