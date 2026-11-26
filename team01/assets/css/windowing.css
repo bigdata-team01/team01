@@ -9,6 +9,8 @@
 .down { color: #1f5a8a; }
 .alert { color: #a3352b; font-weight: 700; }
 .muted { color: #6b7d72; font-weight: 400; }
+.grade-note { margin: 0 0 12px; }
+.grade-note .grade-range { display: inline-block; margin: 4px 12px 0 0; white-space: nowrap; }
 .notes { margin: 0; padding-left: 20px; }
 .notes li + li { margin-top: 6px; }
 @media (max-width: 760px) { .windowing-page .filter-grid { grid-template-columns: 1fr; } }
