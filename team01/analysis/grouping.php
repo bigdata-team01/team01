@@ -182,12 +182,14 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                 <div class="field">
                     <label for="year_from">연도 시작</label>
                     <input id="year_from" name="year_from" type="number"
+                           <?= $dbYearMin !== null ? 'min="' . e((string)$dbYearMin) . '" max="' . e((string)$dbYearMax) . '"' : '' ?>
                            placeholder="<?= $dbYearMin !== null ? e((string)$dbYearMin) : '예) 2015' ?>"
                            value="<?= $yearFrom !== null ? e((string)$yearFrom) : '' ?>">
                 </div>
                 <div class="field">
                     <label for="year_to">연도 끝</label>
                     <input id="year_to" name="year_to" type="number"
+                           <?= $dbYearMin !== null ? 'min="' . e((string)$dbYearMin) . '" max="' . e((string)$dbYearMax) . '"' : '' ?>
                            placeholder="<?= $dbYearMax !== null ? e((string)$dbYearMax) : '예) 2025' ?>"
                            value="<?= $yearTo !== null ? e((string)$yearTo) : '' ?>">
                 </div>
