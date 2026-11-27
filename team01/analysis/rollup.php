@@ -2,6 +2,7 @@
 // 작성자: 김예원 — Rollup / Drill-down 분석 화면.
 declare(strict_types=1);
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
+require_once dirname(__DIR__) . '/includes/price_range.php';
 require_once dirname(__DIR__) . '/includes/rollup.php';
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -9,6 +10,8 @@ $state = rollupInput([]);
 $options = ['unit' => [], 'grade' => [], 'market' => []];
 $rows = [];
 $error = null;
+$monthRange = null;
+$rangeFiltered = false;
 try {
     $state = rollupInput($_GET);
     $connection = db();
@@ -31,6 +34,20 @@ try {
     foreach ($options as $key => $values) {
         if ($state[$key] !== '' && !in_array($state[$key], $values, true)) {
             throw new InvalidArgumentException('선택한 조건이 데이터에 없습니다. 조건을 초기화해 주세요.');
+        }
+    }
+    $rangeFilters = [
+        'unit' => $state['unit'],
+        'grade' => $state['grade'],
+        'market_name' => $state['market'],
+        'category_name' => $state['category'],
+        'fruit_name' => $state['fruit'],
+    ];
+    $rangeFiltered = count(array_filter($rangeFilters, fn ($value) => $value !== '')) > 0;
+    $monthRange = priceMonthRange($connection, $rangeFilters);
+    foreach (['start', 'end'] as $key) {
+        if ($state[$key] !== '' && !monthInPriceRange($state[$key], $monthRange)) {
+            throw new InvalidArgumentException('기간은 현재 선택 조건의 검색 가능 범위 안에서 선택하세요.');
         }
     }
     if ($state['unit'] !== '' && $state['grade'] !== '') {
@@ -76,8 +93,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                     <option value="time" <?= $state['axis'] === 'time' ? 'selected' : '' ?>>시간 계층</option>
                 </select>
             </label>
-            <label>시작 월 <input type="month" name="start" value="<?= e($state['start']) ?>"></label>
-            <label>종료 월 <input type="month" name="end" value="<?= e($state['end']) ?>"></label>
+            <label>시작 월 <input type="month" name="start" <?= $monthRange ? 'min="' . e($monthRange['min']) . '" max="' . e($monthRange['max']) . '"' : '' ?> value="<?= e($state['start']) ?>"></label>
+            <label>종료 월 <input type="month" name="end" <?= $monthRange ? 'min="' . e($monthRange['min']) . '" max="' . e($monthRange['max']) . '"' : '' ?> value="<?= e($state['end']) ?>"></label>
             <?php foreach (['unit' => '거래 단위', 'grade' => '등급', 'market' => '소비 도시'] as $key => $label): ?>
                 <label><?= e($label) ?>
                     <select name="<?= e($key) ?>" <?= $key !== 'market' ? 'required' : '' ?>>
@@ -91,6 +108,7 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
             <input type="hidden" name="category" value="<?= e($state['category']) ?>">
             <input type="hidden" name="fruit" value="<?= e($state['fruit']) ?>">
             <input type="hidden" name="year" value="<?= e($state['year']) ?>">
+            <p class="range-hint rollup-range-hint"><?= e(priceRangeMessage($monthRange, $rangeFiltered)) ?> 품종별 관측기간은 다를 수 있습니다.</p>
             <div class="rollup-actions">
                 <button type="submit">조회</button>
                 <a class="reset-button" href="rollup.php">조건 초기화</a>

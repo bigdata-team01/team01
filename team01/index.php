@@ -195,11 +195,13 @@ require_once __DIR__ . '/includes/layout_open.php';
             <p class="data-card-sub">Edit Prices</p>
         </a>
     </div>
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <p class="data-section-notice"><?= e((string)($_SESSION['login_id'] ?? '회원')) ?>님 로그인 중 · <a href="auth/logout.php">로그아웃</a></p>
-    <?php else: ?>
+    <?php if (!isset($_SESSION['user_id'])): ?>
         <p class="data-section-notice">가격 데이터 등록 및 수정은 로그인 후 이용할 수 있습니다. <a href="auth/login.php">로그인</a> · <a href="auth/register.php">회원가입</a></p>
     <?php endif; ?>
 </section>
+
+<?php if (isset($_SESSION['user_id'])): ?>
+    <p class="data-section-notice" style="margin-top: 12px;"><?= e((string)($_SESSION['login_id'] ?? '회원')) ?>님 로그인 중 · <a href="auth/logout.php">로그아웃</a></p>
+<?php endif; ?>
 
 <?php require_once __DIR__ . '/includes/layout_close.php'; ?>

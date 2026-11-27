@@ -610,6 +610,13 @@
   box-shadow: 0 0 0 3px rgba(40, 93, 66, 0.15);
 }
 
+.content-area .range-hint {
+  margin: -4px 0 0;
+  color: #687c70;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
 /* section 안에 직접 들어온 form의 위쪽 margin 제거 (price-form.css 충돌 방지) */
 .content-area section > form {
   margin-top: 0;

@@ -59,6 +59,7 @@ function crud_page_start(string $title): void
         }
         .range { display: flex; align-items: center; gap: 6px; }
         .range span { color: #999999; }
+        .card > .range-hint { margin: 10px 0 0; }
 
         .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 

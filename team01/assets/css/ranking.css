@@ -19,6 +19,8 @@
   transition: background 0.15s;
 }
 .filter-grid button:hover { background: #1e4932; }
+.filter-range-hint { grid-column: 1 / -1; }
+.result-range-hint { margin: 0 0 12px; }
 .result-summary { color: #4a6053; margin: 0 0 12px; }
 .notice, .errors {
   padding: 14px 16px;

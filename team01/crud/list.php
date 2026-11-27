@@ -1,6 +1,7 @@
 <?php
 // 가격 자료 검색(SELECT) 페이지 (작성: 유채은)
 require_once dirname(__DIR__) . '/includes/bootstrap.php';
+require_once dirname(__DIR__) . '/includes/price_range.php';
 require_once dirname(__DIR__) . '/auth/session.php';
 require_once __DIR__ . '/crud_layout.php';
 
@@ -23,20 +24,28 @@ function int_param(string $name): ?int
     return (is_string($value) && ctype_digit($value)) ? (int) $value : null;
 }
 
-function month_param(string $name): ?string
+function month_param(string $name, string &$inputError): ?string
 {
     $value = $_GET[$name] ?? '';
+    if ($value === '') {
+        return null;
+    }
+    if (!is_string($value) || !preg_match('/^\d{4}-(0[1-9]|1[0-2])$/D', $value)) {
+        $inputError = '기간은 YYYY-MM 형식으로 입력하세요.';
+        return null;
+    }
 
-    return (is_string($value) && preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $value)) ? $value : null;
+    return $value;
 }
 
+$inputError = '';
 $filters = [
     'fruit_id'   => int_param('fruit_id'),
     'variety_id' => int_param('variety_id'),
     'market_id'  => int_param('market_id'),
     'grade'      => in_array($_GET['grade'] ?? '', GRADES, true) ? $_GET['grade'] : null,
-    'from'       => month_param('from'),
-    'to'         => month_param('to'),
+    'from'       => month_param('from', $inputError),
+    'to'         => month_param('to', $inputError),
     'min_price'  => int_param('min_price'),
     'max_price'  => int_param('max_price'),
 ];
@@ -97,17 +106,37 @@ function bind_all(PDOStatement $statement, array $params): void
 $rows = [];
 $total = 0;
 $error = '';
+$monthRange = null;
+$rangeFilters = [
+    'fruit_id' => $filters['fruit_id'],
+    'variety_id' => $filters['variety_id'],
+    'market_id' => $filters['market_id'],
+    'grade' => $filters['grade'],
+    'min_price' => $filters['min_price'],
+    'max_price' => $filters['max_price'],
+];
+$rangeFiltered = count(array_filter($rangeFilters, fn ($value) => $value !== null)) > 0;
 
 try {
+    $connection = db();
     // 검색 화면의 선택지
-    $fruits = db()->query('SELECT fruit_id, fruit_name FROM FRUIT ORDER BY fruit_id')->fetchAll();
-    $varieties = db()->query(
+    $fruits = $connection->query('SELECT fruit_id, fruit_name FROM FRUIT ORDER BY fruit_id')->fetchAll();
+    $varieties = $connection->query(
         'SELECT variety_id, fruit_id, variety_name FROM FRUIT_VARIETY ORDER BY fruit_id, variety_id'
     )->fetchAll();
-    $markets = db()->query('SELECT market_id, market_name FROM MARKET_REGION ORDER BY market_id')->fetchAll();
+    $markets = $connection->query('SELECT market_id, market_name FROM MARKET_REGION ORDER BY market_id')->fetchAll();
+    if ($inputError !== '') {
+        throw new InvalidArgumentException($inputError);
+    }
+    $monthRange = priceMonthRange($connection, $rangeFilters);
+    foreach (['from', 'to'] as $key) {
+        if ($filters[$key] !== null && !monthInPriceRange($filters[$key], $monthRange)) {
+            throw new InvalidArgumentException('기간은 현재 검색 조건의 검색 가능 범위 안에서 선택하세요.');
+        }
+    }
 
     // 전체 건수
-    $countStatement = db()->prepare('SELECT COUNT(*)' . $fromSql . $whereSql);
+    $countStatement = $connection->prepare('SELECT COUNT(*)' . $fromSql . $whereSql);
     bind_all($countStatement, $params);
     $countStatement->execute();
     $total = (int) $countStatement->fetchColumn();
@@ -116,7 +145,7 @@ try {
     $page = min($page, $totalPages);
 
     // 현재 페이지 행
-    $listStatement = db()->prepare(
+    $listStatement = $connection->prepare(
         'SELECT p.price_id, p.ym, p.grade, p.avg_price, p.min_price, p.max_price,
                 f.fruit_name, v.variety_name, v.unit, m.market_name'
         . $fromSql . $whereSql
@@ -127,6 +156,10 @@ try {
     bind_all($listStatement, $limitParams);
     $listStatement->execute();
     $rows = $listStatement->fetchAll();
+} catch (InvalidArgumentException $exception) {
+    http_response_code(400);
+    $totalPages = 1;
+    $error = $exception->getMessage();
 } catch (PDOException $exception) {
     $fruits = $varieties = $markets = [];
     $totalPages = 1;
@@ -214,11 +247,11 @@ crud_page_start('Browse Records');
                 </div>
                 <div class="field">
                     <label for="from">시작 월</label>
-                    <input type="month" id="from" name="from" value="<?= e($filters['from'] ?? '') ?>">
+                    <input type="month" id="from" name="from" <?= $monthRange ? 'min="' . e($monthRange['min']) . '" max="' . e($monthRange['max']) . '"' : '' ?> value="<?= e($filters['from'] ?? '') ?>">
                 </div>
                 <div class="field">
                     <label for="to">끝 월</label>
-                    <input type="month" id="to" name="to" value="<?= e($filters['to'] ?? '') ?>">
+                    <input type="month" id="to" name="to" <?= $monthRange ? 'min="' . e($monthRange['min']) . '" max="' . e($monthRange['max']) . '"' : '' ?> value="<?= e($filters['to'] ?? '') ?>">
                 </div>
                 <div class="field">
                     <label for="min_price">평균가 (원)</label>
@@ -239,6 +272,7 @@ crud_page_start('Browse Records');
                     </select>
                 </div>
             </div>
+            <p class="range-hint"><?= e(priceRangeMessage($monthRange, $rangeFiltered)) ?> 품종별 관측기간은 다를 수 있습니다.</p>
             <div class="actions">
                 <a class="btn btn-light" href="list.php">초기화</a>
                 <button type="submit" class="btn btn-primary">검색</button>
