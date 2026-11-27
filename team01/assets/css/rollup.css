@@ -82,6 +82,8 @@
   gap: 10px;
 }
 
+.rollup-range-hint { grid-column: 1 / -1; }
+
 .rollup-page button,
 .rollup-page .reset-button {
   display: inline-flex;
