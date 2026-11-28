@@ -1,3 +1,6 @@
+<?php
+// 작성자: 이미소 — 공통 사이드바 레이아웃 (닫기).
+?>
         </div><!-- content-body -->
         <footer class="site-footer">
             <span>© 2026 Team01 | $_POST · Fruit × Climate</span>
