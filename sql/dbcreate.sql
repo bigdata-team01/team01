@@ -1,8 +1,10 @@
 -- 첨부 ERD 수정안 기준. MariaDB 10.2.1 이상 / InnoDB.
--- 먼저 사용할 빈 데이터베이스를 선택한 뒤 실행하세요. DB명/계정은 이 파일에 고정하지 않습니다.
--- 예: mysql -u 사용자 -p team01 < dbcreate.sql
+-- 평가용 team01 데이터베이스를 미리 생성하고, 해당 DB에 권한이 있는 계정으로 실행하세요.
+-- 이 스크립트는 team01을 선택합니다. 다른 DB를 지정해 접속해도 team01에 적용됩니다.
+-- 예: mysql -u team01 -p < dbcreate.sql
 -- 기존 테이블을 삭제하거나 변경하지 않습니다. 이미 같은 이름의 테이블이 있으면 실행을 중단하세요.
 SET NAMES utf8mb4;
+USE team01;
 
 CREATE TABLE FRUIT_CATEGORY (
     category_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
