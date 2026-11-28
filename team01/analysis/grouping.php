@@ -116,7 +116,8 @@ if ($submitted) {
                     JOIN PRODUCTION_AREA pa ON rs.area_id = pa.area_id
                     WHERE pa.area_name = vpw.area_name
                       AND rs.year      = vpw.year
-                      AND vpw.ym BETWEEN rs.start_date AND rs.end_date
+                      AND vpw.ym <= rs.end_date
+                      AND LAST_DAY(vpw.ym) >= rs.start_date
                       AND rs.rain_days >= CASE
                           WHEN pa.area_name IN ('서귀포','안동','장수','영주','영천') THEN 23
                           ELSE 24
@@ -181,12 +182,14 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
                 <div class="field">
                     <label for="year_from">연도 시작</label>
                     <input id="year_from" name="year_from" type="number"
+                           <?= $dbYearMin !== null ? 'min="' . e((string)$dbYearMin) . '" max="' . e((string)$dbYearMax) . '"' : '' ?>
                            placeholder="<?= $dbYearMin !== null ? e((string)$dbYearMin) : '예) 2015' ?>"
                            value="<?= $yearFrom !== null ? e((string)$yearFrom) : '' ?>">
                 </div>
                 <div class="field">
                     <label for="year_to">연도 끝</label>
                     <input id="year_to" name="year_to" type="number"
+                           <?= $dbYearMin !== null ? 'min="' . e((string)$dbYearMin) . '" max="' . e((string)$dbYearMax) . '"' : '' ?>
                            placeholder="<?= $dbYearMax !== null ? e((string)$dbYearMax) : '예) 2025' ?>"
                            value="<?= $yearTo !== null ? e((string)$yearTo) : '' ?>">
                 </div>
@@ -198,7 +201,8 @@ require_once dirname(__DIR__) . '/includes/layout_open.php';
 
             <p class="agg-note">연도<?= $dbYearMin !== null ? ': ' . e((string)$dbYearMin) . '~' . e((string)$dbYearMax) . '년' : '' ?> · 비워 두면 전체 기간 조회</p>
             <p class="agg-note">집계 항목: 건수 · 평균가격 합계(원) · 평균가격(원) · 최고 평균가격(원) · 최저 평균가격(원) · 평균기온(℃) · 평균 월강수량(mm)</p>
-            
+            <p class="agg-note">※ 등급 체계 변경: 포도는 2023년부터 상품·중품 대신 L과·M과로, 감귤은 2019년부터 M과·S과로 등급 체계가 바뀌었습니다. 서로 다른 등급의 가격이 함께 평균에 포함되므로, 연도별 가격 비교 시 등급 구성의 차이가 결과에 영향을 줄 수 있습니다. 등급별로 비교하려면 그룹 기준에 '등급'을 함께 선택하세요.</p>
+
             <hr class="form-divider">
 
             <fieldset class="climate-checks">
